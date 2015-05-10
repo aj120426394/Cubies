@@ -107,17 +107,23 @@ public class game : MonoBehaviour {
 		if (camSize <= 0) {
 			camSize = 1;
 		}
-		this.camera.orthographicSize = camSize;
+		//this.camera.orthographicSize = camSize;
+		this.camera.orthographicSize = Mathf.MoveTowards (this.camera.orthographicSize, camSize, 2.0f * Time.deltaTime);
 
 		targetX = targetX / characters.Length;
-		targetY = targetX / characters.Length;
-		targetZ = targetX / characters.Length;
+		targetY = targetY / characters.Length;
+		targetZ = targetZ / characters.Length;
+
+		//print ("(" + targetX + ", " + targetY + ", " + targetZ + ")");
+
 		Vector3 target = new Vector3 (targetX, targetY, targetZ);
+
+
 
 		Vector3 point = camera.WorldToViewportPoint(target);
 		Vector3 delta = target - camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z));
 		Vector3 destination = transform.position + delta;
-		transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, 0.4f);
+		transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, 0.1f);
 
 
 	}

@@ -81,7 +81,7 @@ public class character : MonoBehaviour {
 		if (transform.position == coll.transform.position) {
 			this.moveObject = false;
 		}
-		if (coll.gameObject.name == "finish") {
+		if (coll.gameObject.name == "FINISH") {
 			this.inputAble = false;
 			send("GameFin");
 		} else {
@@ -117,7 +117,7 @@ public class character : MonoBehaviour {
 		foreach (char ch in c){
 			result += ch;
 		}
-
+		//print (moveableObs.Count);
 		foreach (obstacle o in connObs) {
 			if(result.Contains(o.getTag())){
 				moveableObs.Add(o.getTag(),o);
