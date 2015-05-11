@@ -6,6 +6,7 @@ public class game : MonoBehaviour {
 	public float speed = 0.5f;
 
 	public character[] characters;
+	private bool gamestart = false;
 
 	
 	private List<string> newFunction;
@@ -32,7 +33,14 @@ public class game : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//inputFunctions2 ();
+		/*
+		if (gamestart) {
+			calCamera();
+		}
+		*/
+
 		calCamera();
+		
 		updateSlower ++; //Recieve data every 4 frames
 		
 		//string[] data = {"C1:I","C1:N","C1:R","C1:O","C1:N","C1:G","C1:T","C1:Y","C1:O","C1:B","C1:E"};
@@ -76,6 +84,7 @@ public class game : MonoBehaviour {
 				string tmp = "GameStart";
 				this.sc.sendData(tmp);
 			}
+			this.gamestart = true;
 		}
 	}
 
@@ -89,7 +98,31 @@ public class game : MonoBehaviour {
 		//character lc = characters[0];
 		Vector3 velocity = Vector3.zero;
 
+		bool objectMove = true;
 		// Calculate the size of cam
+		for (int i = 0; i < characters.Length; i++) {
+			if(i == 0){
+				right = characters[i].transform.position.x;
+				left = characters[i].transform.position.x;
+			}else{
+				if(characters[i].transform.position.x > right){
+					right = characters[i].transform.position.x;
+					//rc = c;
+				}
+				if(characters[i].transform.position.x < left){
+					left = characters[i].transform.position.x;
+					//lc = c;
+				}
+			}
+			targetX += characters[i].transform.position.x;
+			targetY += characters[i].transform.position.y;
+			targetZ += characters[i].transform.position.z;
+			print (characters[i].name + ": move - " + characters[i].getMoveObject());
+			if(!characters[i].getMoveObject()){
+				objectMove = false;
+			}
+		}
+		/*
 		foreach (character c in characters) {
 			if(c.transform.position.x > right){
 				right = c.transform.position.x;
@@ -103,10 +136,18 @@ public class game : MonoBehaviour {
 			targetY += c.transform.position.y;
 			targetZ += c.transform.position.z;
 		}
-		int camSize = (int)((right - left) / 3);
-		if (camSize <= 0) {
-			camSize = 1;
+		*/
+		print ("objectmove:" + objectMove);
+		float camSize = 0f;
+		if (!objectMove) {
+			camSize = 5f;
+		} else {
+			camSize = (right - left) / 3f;
+			if (camSize <= 1f) {
+				camSize = 1f;
+			}
 		}
+
 		//this.camera.orthographicSize = camSize;
 		this.camera.orthographicSize = Mathf.MoveTowards (this.camera.orthographicSize, camSize, 2.0f * Time.deltaTime);
 

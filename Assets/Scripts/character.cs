@@ -8,7 +8,7 @@ public class character : MonoBehaviour {
 	public obstacle startObstacle;
 	private obstacle moveToObstacle;
 
-	public float speed = 0.5f;
+
 
 	//private List<string> newStatement;
 	private string newStatement = "";
@@ -46,6 +46,9 @@ public class character : MonoBehaviour {
 	public void setSerialConnection(SerialConn sc){
 		this.sc = sc;
 	}
+	public bool getMoveObject(){
+		return this.moveObject;
+	}
 	/*
 	 * Set game start
 	 */
@@ -65,28 +68,32 @@ public class character : MonoBehaviour {
 		//gets next objects possition
 		float xPos = obs.transform.position.x;
 		float yPos = obs.transform.position.y;
+		float speed = 2f;
 		Vector3 newPos = new Vector3 (xPos, yPos, 0.0f);
 		
 		float step = speed * Time.deltaTime;
 
 		if (moveObject == true) {
 			transform.position = Vector3.MoveTowards(transform.position, newPos, step);
-		}		
+		}
+
+		if (transform.position == newPos) {
+			this.moveObject = false;
+		}
 	}
 
 	/* Finds out when the next object is reached and gives movement options */
 	void OnTriggerEnter2D(Collider2D coll){
+		if (!coll.name.StartsWith ("C")) {
+			//print ("bumped");
 
-		//print ("bumped");
-		if (transform.position == coll.transform.position) {
-			this.moveObject = false;
-		}
-		if (coll.gameObject.name == "FINISH") {
-			this.inputAble = false;
-			send("GameFin");
-		} else {
-			this.inputAble = true;
-			calMovement(moveToObstacle);
+			if (coll.gameObject.name == "FINISH") {
+				this.inputAble = false;
+				send("GameFin");
+			} else {
+				this.inputAble = true;
+				calMovement(moveToObstacle);
+			}
 		}
 	}
 	/*
@@ -105,7 +112,7 @@ public class character : MonoBehaviour {
 				}
 			}else if(s.getType().Equals("L")){
 				string str = s.getCondtion() + s.getResult();
-				obstacle lresult = checkLoop (0,0,str,obs);
+				obstacle lresult = checkLoop (0,0,str,obs, null);
 				if(lresult != null){
 					moveableObs.Add("L",lresult);
 					obs.highlight();
@@ -114,10 +121,9 @@ public class character : MonoBehaviour {
 			}
 		}
 
-		foreach (char ch in c){
+		foreach (char ch in c) {
 			result += ch;
 		}
-		//print (moveableObs.Count);
 		foreach (obstacle o in connObs) {
 			if(result.Contains(o.getTag())){
 				moveableObs.Add(o.getTag(),o);
@@ -125,15 +131,12 @@ public class character : MonoBehaviour {
 				send(o.getTag());
 			}
 		}
-
-		foreach (string s in moveableObs.Keys) {
-			print (s);
-		}
 	}
 	/*
 	 * Check if the obstacle be able to use LOOP
 	 */
-	private obstacle checkLoop(int x, int y, string str, obstacle obs){
+	private obstacle checkLoop(int x, int y, string str, obstacle obs, obstacle final){
+		obstacle finalObstacle = final;
 		int current = x;
 		int next = 0;
 		if (current == str.Length - 1) {
@@ -141,20 +144,32 @@ public class character : MonoBehaviour {
 		} else {
 			next = current + 1;
 		}
-
-		print (str + ": " + current);
+		if(y > 0 && current == str.Length-1){
+			finalObstacle = obs;
+		}
+		//print (str + ": " + current);
 		if (obs.getTag ().Contains (str.ElementAt (current))) {
+
 			foreach(obstacle o in obs.getConnection()){
+
 				if(o.getTag().Contains(str.ElementAt(next))){
-					if(current == str.Length -1){
-						return checkLoop (next, y+1, str, o);
-					}else{
-						return checkLoop (next, y, str, o);
+				
+					if(current == str.Length -1) {
+
+						return checkLoop (next, y+1, str, o, finalObstacle);
+			
+					} else {
+					
+						return checkLoop (next, y, str, o, finalObstacle);
+					
 					} 
+
 				}
+
 			}
-			if(y > 0 && current == str.Length-1){
-				return obs;
+
+			if(y > 0){
+				return finalObstacle;
 			}
 		}
 		return null;
@@ -183,9 +198,6 @@ public class character : MonoBehaviour {
 				}
 			} else {
 				if(moveableObs.ContainsKey(command)){
-					if(command.Contains("L")){
-					}else{
-						}
 					this.moveToObstacle = moveableObs[command];
 					this.moveObject = true;
 					this.inputAble = false;
@@ -194,19 +206,6 @@ public class character : MonoBehaviour {
 					}
 					moveableObs.Clear();
 				}
-				/*
-				for(int i = 0; i < moveableObs.Count(); i++){
-					if(moveableObs.ContainsKey(command))){
-						this.moveToObstacle = moveableObs[i];
-						this.moveObject = true;
-						this.inputAble = false;
-						foreach(obstacle o in moveableObs){
-							o.disHighlight();
-						}
-						moveableObs.Clear();
-					}
-				}
-				*/
 			}
 		}
 	}
