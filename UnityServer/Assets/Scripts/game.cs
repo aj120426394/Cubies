@@ -117,7 +117,7 @@ public class game : MonoBehaviour {
 			targetX += characters[i].transform.position.x;
 			targetY += characters[i].transform.position.y;
 			targetZ += characters[i].transform.position.z;
-			print (characters[i].name + ": move - " + characters[i].getMoveObject());
+			//print (characters[i].name + ": move - " + characters[i].getMoveObject());
 			if(!characters[i].getMoveObject()){
 				objectMove = false;
 			}
@@ -137,7 +137,7 @@ public class game : MonoBehaviour {
 			targetZ += c.transform.position.z;
 		}
 		*/
-		print ("objectmove:" + objectMove);
+		//print ("objectmove:" + objectMove);
 		float camSize = 0f;
 		if (!objectMove) {
 			camSize = 5f;
