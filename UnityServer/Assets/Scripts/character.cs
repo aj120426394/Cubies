@@ -8,27 +8,25 @@ public class character : MonoBehaviour {
 	public obstacle startObstacle;
 	private obstacle moveToObstacle;
 
-
-
-	//private List<string> newStatement;
 	private string newStatement = "";
-	//private List<obstacle> moveableObs;
 	private Dictionary<string, obstacle> moveableObs;
 	private List<Statement> statementList;
+	private List<obstacle> sameColorList;
 
-	private bool gameStart = false;
-	private float posX;
-	private float posY;
-
-	private bool inputAble = true;
-	private bool moveObject = false;
+	private bool gameStart = false;		//Flag to show if the game is started.
+	private bool inputAble = true;		//Controller to albe input the data.
+	private bool moveObject = false;	//Flag to show if the character is moving.
+	private bool sameColor = false;		//Controller to trigger the same color condition.
 
 	private SerialConn sc;
 	private LineRenderer lr;
 
+	private const int fixUpdateInterval = 100;
+	private int fixedUpdate = 0;
+
 	void Start(){
 		this.statementList = new List<Statement> ();
-		//this.moveableObs = new List<obstacle> ();
+		this.sameColorList = new List<obstacle> ();
 		this.moveableObs = new Dictionary<string, obstacle> ();
 		this.moveToObstacle = startObstacle;
 
@@ -61,6 +59,31 @@ public class character : MonoBehaviour {
 	/* Players every frame */
 	void FixedUpdate() {
 		movePlayer (this.moveToObstacle);
+
+		this.fixedUpdate++;
+		print ("Time:" + Time.deltaTime);
+
+		if (this.sameColor && fixedUpdate == fixUpdateInterval) {
+			fixedUpdate = 0;
+			/*
+			for(int i = 0; i < sameColorList.Count; i++){
+				if(moveableObs.ContainsKey(sameColorList[i].getTag())){
+					obstacle temp = moveableObs[o.getTag()];
+					moveableObs[sameColorList[i].getTag()] = sameColorList[i];
+					sameColorList[i] = temp;
+				}
+			}
+			*/
+			foreach(obstacle o in sameColorList){
+				if(moveableObs.ContainsKey(o.getTag())){
+					moveableObs[o.getTag()].disHighlight();
+					o.highlight();
+					obstacle temp = moveableObs[o.getTag()];
+					moveableObs[o.getTag()] = o;
+					o = temp;
+				}
+			}
+		}
 	}
 
 	/* Moves player based on provided next position */
@@ -126,9 +149,15 @@ public class character : MonoBehaviour {
 		}
 		foreach (obstacle o in connObs) {
 			if(result.Contains(o.getTag())){
-				moveableObs.Add(o.getTag(),o);
-				o.highlight();
-				send(o.getTag());
+				if(moveableObs.ContainsKey(o.getTag())){
+					this.sameColorList.Add(o);
+					this.sameColor = true;
+				}else{
+					moveableObs.Add(o.getTag(),o);
+					o.highlight();
+					send(o.getTag());
+				}
+
 			}
 		}
 	}
@@ -204,6 +233,8 @@ public class character : MonoBehaviour {
 					foreach(obstacle o in moveableObs.Values){
 						o.disHighlight();
 					}
+					sameColorList.Clear();
+					sameColor = false;
 					moveableObs.Clear();
 				}
 			}

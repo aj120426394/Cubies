@@ -20,11 +20,11 @@ public class game : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		print ("GAME RULES: I = if T = then  B = blue  R = Red G = green  Y = yellow");
-		sc = new SerialConn ("/dev/cu.usbmodem330471", 9600);
+		//sc = new SerialConn ("/dev/cu.usbmodem330471", 9600);
 		foreach (character c in characters) {
 			c.setSerialConnection (this.sc);
 		}
-		sc.sendData ("StartInput");
+		//sc.sendData ("StartInput");
 		this.camera = GetComponent<Camera> ();
 	}
 	public int updateInterval = 4; //the delay between updates
@@ -53,7 +53,8 @@ public class game : MonoBehaviour {
 		//this.sc.sendData("C1:R");
 
 		if(updateSlower >= updateInterval){ //
-			string data = sc.recieveData ();
+			//string data = sc.recieveData ();
+			string data = "";
 			if(data.Length > 0){
 				//print ("In coming data: " + data);
 				inputFunctions (data);
