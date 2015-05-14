@@ -23,7 +23,7 @@ const int numOfClient = 3;
 char serialData[20];
 char* clients[numOfClient] = {"clie1", "clie2", "clie3"};
 
-
+//5566223365
 void setup(){
   Serial.begin(9600);
   Mirf.spi = &MirfHardwareSpi;
