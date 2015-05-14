@@ -12,18 +12,17 @@
  * CSN -> 7
  *
  */
-//1321121321322312313213
+
 #include <SPI.h>
 #include <Mirf.h>
 #include <nRF24L01.h>
 #include <MirfHardwareSpiDriver.h>
-//3213548
+
 const int numOfClient = 3;
 
 char serialData[20];
 char* clients[numOfClient] = {"clie1", "clie2", "clie3"};
 
-//5566223365
 void setup(){
   Serial.begin(9600);
   Mirf.spi = &MirfHardwareSpi;
