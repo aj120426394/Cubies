@@ -12,6 +12,7 @@ public class character : MonoBehaviour {
 	private Dictionary<string, obstacle> moveableObs;
 	private List<Statement> statementList;
 	private List<obstacle> sameColorList;
+	private List<obstacle> loopPath;
 
 	private bool gameStart = false;		//Flag to show if the game is started.
 	private bool inputAble = true;		//Controller to albe input the data.
@@ -27,6 +28,7 @@ public class character : MonoBehaviour {
 	void Start(){
 		this.statementList = new List<Statement> ();
 		this.sameColorList = new List<obstacle> ();
+		this.loopPath = new List<obstacle> ();
 		this.moveableObs = new Dictionary<string, obstacle> ();
 		this.moveToObstacle = startObstacle;
 
@@ -65,22 +67,13 @@ public class character : MonoBehaviour {
 
 		if (this.sameColor && fixedUpdate == fixUpdateInterval) {
 			fixedUpdate = 0;
-			/*
 			for(int i = 0; i < sameColorList.Count; i++){
 				if(moveableObs.ContainsKey(sameColorList[i].getTag())){
-					obstacle temp = moveableObs[o.getTag()];
+					moveableObs[sameColorList[i].getTag()].disHighlight();
+					sameColorList[i].highlight();
+					obstacle temp = moveableObs[sameColorList[i].getTag()];
 					moveableObs[sameColorList[i].getTag()] = sameColorList[i];
 					sameColorList[i] = temp;
-				}
-			}
-			*/
-			foreach(obstacle o in sameColorList){
-				if(moveableObs.ContainsKey(o.getTag())){
-					moveableObs[o.getTag()].disHighlight();
-					o.highlight();
-					obstacle temp = moveableObs[o.getTag()];
-					moveableObs[o.getTag()] = o;
-					o = temp;
 				}
 			}
 		}
@@ -119,6 +112,7 @@ public class character : MonoBehaviour {
 			}
 		}
 	}
+
 	/*
 	 * Calculate the movement base on where the character is.
 	 */
@@ -179,10 +173,12 @@ public class character : MonoBehaviour {
 		//print (str + ": " + current);
 		if (obs.getTag ().Contains (str.ElementAt (current))) {
 
+			this.loopPath.Add(obs);
+
 			foreach(obstacle o in obs.getConnection()){
 
-				if(o.getTag().Contains(str.ElementAt(next))){
-				
+				if(o.getTag().Contains(str.ElementAt(next)) && !loopPath.Contains(o)){
+			
 					if(current == str.Length -1) {
 
 						return checkLoop (next, y+1, str, o, finalObstacle);
@@ -233,9 +229,10 @@ public class character : MonoBehaviour {
 					foreach(obstacle o in moveableObs.Values){
 						o.disHighlight();
 					}
-					sameColorList.Clear();
-					sameColor = false;
-					moveableObs.Clear();
+					this.sameColorList.Clear();
+					this.sameColor = false;
+					this.moveableObs.Clear();
+					this.loopPath.Clear();
 				}
 			}
 		}

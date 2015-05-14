@@ -20,11 +20,11 @@ public class game : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		print ("GAME RULES: I = if T = then  B = blue  R = Red G = green  Y = yellow");
-		//sc = new SerialConn ("/dev/cu.usbmodem330471", 9600);
+		sc = new SerialConn ("/dev/cu.usbmodem330471", 9600);
 		foreach (character c in characters) {
 			c.setSerialConnection (this.sc);
 		}
-		//sc.sendData ("StartInput");
+		sc.sendData ("StartInput");
 		this.camera = GetComponent<Camera> ();
 	}
 	public int updateInterval = 4; //the delay between updates
@@ -33,28 +33,17 @@ public class game : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//inputFunctions2 ();
-		/*
+
 		if (gamestart) {
 			calCamera();
 		}
-		*/
+		//calCamera();
 
-		calCamera();
-		
+
 		updateSlower ++; //Recieve data every 4 frames
-		
-		//string[] data = {"C1:I","C1:N","C1:R","C1:O","C1:N","C1:G","C1:T","C1:Y","C1:O","C1:B","C1:E"};
-		//string data = sc.recieveData ();
-		/*
-		foreach(string d in data){
-			inputFunctions(d);
-		}
-		*/
-		//this.sc.sendData("C1:R");
-
 		if(updateSlower >= updateInterval){ //
-			//string data = sc.recieveData ();
-			string data = "";
+			string data = sc.recieveData ();
+			//string data = "";
 			if(data.Length > 0){
 				//print ("In coming data: " + data);
 				inputFunctions (data);
@@ -62,7 +51,6 @@ public class game : MonoBehaviour {
 			updateSlower = 0;
 		}
 		inputFunctions2 ();
-
 	}
 
 	/* Handles input keys */

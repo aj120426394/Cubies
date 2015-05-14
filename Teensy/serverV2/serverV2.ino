@@ -76,11 +76,11 @@ void loop(){
       str = "E"; //ENTER
     }
     Serial.println(from + ":" + str);
-    //Serial.println(data[1], HEX);
+    //S erial.println(data[1], HEX);
     Serial.flush();
   }
   
-  //read from Serial
+  // Read from Serial
   if(Serial.available() > 0){
     int lf = 10;
     Serial.readBytesUntil(lf,serialData,11);
@@ -135,6 +135,8 @@ void sendData(char* client, char* sendingData){
     sendData[0] = (byte)0x09;
   }else if(strstr(sendingData, "P") != NULL){
     sendData[0] = (byte)0x0A;
+  }else if(strstr(sendingData, "L") != NULL){
+    sendData[0] = (byte)0x04;
   }
   Mirf.setTADDR((byte *)client);
   Mirf.send(sendData);

@@ -129,11 +129,20 @@ void bState2(){
     }
    
     if(!pressLOOP){
-       if(digitalRead(buttonNOT) == HIGH && checkNOT){
-         NOT();
-       }else if(digitalRead(buttonLOOP) == HIGH && checkBLUE){
-         BLUE();
-       }
+      if(gameStart){
+        if(digitalRead(buttonNOT) == HIGH && checkBLUE){
+           BLUE();
+       }else if(digitalRead(buttonLOOP) == HIGH && checkLOOP){
+           LOOP();
+       } 
+      }else{
+        if(digitalRead(buttonNOT) == HIGH && checkNOT){
+           NOT();
+        }else if(digitalRead(buttonLOOP) == HIGH && checkBLUE){
+           BLUE();
+        }
+      }
+       
      }else{
        if(digitalRead(buttonNOT) == HIGH && checkBLUE){
          BLUE();
@@ -227,8 +236,9 @@ void LOOP(){
   Serial.println("LOOP");
   byte str = (byte)0x04;
   dataSending(str);
-  
-  pressLOOP = true;
+  if(!gameStart){
+    pressLOOP = true;
+  }
   checkLOOP = false;
   
   // LED twinkle 
@@ -339,6 +349,9 @@ void dataGet(byte str){
   }else if(str == (byte)0x0A){
     checkPURPLE = true;
     Serial.println("LED:PURPLE");
+  }else if(str == (byte)0x04){
+    checkLOOP = true;
+    Serial.println("LED:LOOP");
   }
 }
 
