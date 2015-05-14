@@ -30,8 +30,6 @@ void setup(){
   Mirf.setRADDR((byte *)"serv1");
   Mirf.payload = 32;
   Mirf.config();
-  //Serial.println("Listening..."); 
-
 }
 
 void loop(){

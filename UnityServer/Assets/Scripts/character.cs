@@ -22,7 +22,7 @@ public class character : MonoBehaviour {
 	private SerialConn sc;
 	private LineRenderer lr;
 
-	private const int fixUpdateInterval = 100;
+	private const int fixUpdateInterval = 50;
 	private int fixedUpdate = 0;
 
 	void Start(){
@@ -61,10 +61,12 @@ public class character : MonoBehaviour {
 	/* Players every frame */
 	void FixedUpdate() {
 		movePlayer (this.moveToObstacle);
+		if (this.sameColor) {
+			this.fixedUpdate++;
+		}
 
-		this.fixedUpdate++;
-		print ("Time:" + Time.deltaTime);
-
+		//print ("Time:" + Time.deltaTime);
+		//print ("sameColor: " + this.sameColor + "fixed: " + fixedUpdate);
 		if (this.sameColor && fixedUpdate == fixUpdateInterval) {
 			fixedUpdate = 0;
 			for(int i = 0; i < sameColorList.Count; i++){
@@ -132,7 +134,7 @@ public class character : MonoBehaviour {
 				obstacle lresult = checkLoop (0,0,str,obs, null);
 				if(lresult != null){
 					moveableObs.Add("L",lresult);
-					obs.highlight();
+					lresult.highlight();
 					send("L");
 				}
 			}
@@ -142,8 +144,11 @@ public class character : MonoBehaviour {
 			result += ch;
 		}
 		foreach (obstacle o in connObs) {
+
 			if(result.Contains(o.getTag())){
 				if(moveableObs.ContainsKey(o.getTag())){
+					print ("test" + o.getTag());
+					print (this.sameColor);
 					this.sameColorList.Add(o);
 					this.sameColor = true;
 				}else{
@@ -215,7 +220,6 @@ public class character : MonoBehaviour {
 			print ("C1 get: " + command);
 			if (!gameStart) {
 				newStatement += command;
-				//print (newStatement);
 				if (newStatement.Contains("E")) {
 					print (newStatement);
 					addStatement (newStatement);
