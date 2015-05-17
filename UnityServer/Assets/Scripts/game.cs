@@ -14,6 +14,7 @@ public class game : MonoBehaviour {
 	
 	private SerialConn sc;
 	private character c1;
+	private NetworkConnection nc;
 
 	private Camera camera;
 
@@ -21,12 +22,19 @@ public class game : MonoBehaviour {
 	void Start () {
 		print ("GAME RULES: I = if T = then  B = blue  R = Red G = green  Y = yellow");
 		sc = new SerialConn ("/dev/cu.usbmodem330471", 9600);
+		nc = new NetworkConnection (GetComponent<NetworkView> ());
+		nc.OpenConnection ();
 		foreach (character c in characters) {
 			c.setSerialConnection (this.sc);
 		}
 		sc.sendData ("StartInput");
 		this.camera = GetComponent<Camera> ();
 	}
+
+	void OnDestroy(){
+		nc.CloseConnection ();
+	}
+
 	public int updateInterval = 4; //the delay between updates
 	public int updateSlower = 0; //container
 	
@@ -39,7 +47,6 @@ public class game : MonoBehaviour {
 		}
 		//calCamera();
 
-
 		updateSlower ++; //Recieve data every 4 frames
 		if(updateSlower >= updateInterval){ //
 			string data = sc.recieveData ();
@@ -47,6 +54,7 @@ public class game : MonoBehaviour {
 			if(data.Length > 0){
 				//print ("In coming data: " + data);
 				inputFunctions (data);
+				nc.sendData(data);
 			}
 			updateSlower = 0;
 		}
@@ -83,8 +91,6 @@ public class game : MonoBehaviour {
 		float targetX = 0f;
 		float targetY = 0f;
 		float targetZ = 0f;
-		//character rc = characters[0];
-		//character lc = characters[0];
 		Vector3 velocity = Vector3.zero;
 
 		bool objectMove = true;
@@ -96,37 +102,20 @@ public class game : MonoBehaviour {
 			}else{
 				if(characters[i].transform.position.x > right){
 					right = characters[i].transform.position.x;
-					//rc = c;
 				}
 				if(characters[i].transform.position.x < left){
 					left = characters[i].transform.position.x;
-					//lc = c;
 				}
 			}
 			targetX += characters[i].transform.position.x;
 			targetY += characters[i].transform.position.y;
 			targetZ += characters[i].transform.position.z;
-			//print (characters[i].name + ": move - " + characters[i].getMoveObject());
+
 			if(!characters[i].getMoveObject()){
 				objectMove = false;
 			}
 		}
-		/*
-		foreach (character c in characters) {
-			if(c.transform.position.x > right){
-				right = c.transform.position.x;
-				//rc = c;
-			}
-			if(c.transform.position.x < left){
-				left = c.transform.position.x;
-				//lc = c;
-			}
-			targetX += c.transform.position.x;
-			targetY += c.transform.position.y;
-			targetZ += c.transform.position.z;
-		}
-		*/
-		//print ("objectmove:" + objectMove);
+
 		float camSize = 0f;
 		if (!objectMove) {
 			camSize = 5f;
@@ -137,24 +126,26 @@ public class game : MonoBehaviour {
 			}
 		}
 
-		//this.camera.orthographicSize = camSize;
 		this.camera.orthographicSize = Mathf.MoveTowards (this.camera.orthographicSize, camSize, 2.0f * Time.deltaTime);
 
 		targetX = targetX / characters.Length;
 		targetY = targetY / characters.Length;
 		targetZ = targetZ / characters.Length;
 
-		//print ("(" + targetX + ", " + targetY + ", " + targetZ + ")");
-
 		Vector3 target = new Vector3 (targetX, targetY, targetZ);
-
-
 
 		Vector3 point = camera.WorldToViewportPoint(target);
 		Vector3 delta = target - camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z));
 		Vector3 destination = transform.position + delta;
 		transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, 0.1f);
+	}
 
+	/*
+	 * Using for RPC sending to client
+	 */
 
+	[RPC]
+	void ChangeColor(string str){
+		//Debug.Log ("Do you get anything? " + str);
 	}
 }
