@@ -29,6 +29,9 @@ public class game : MonoBehaviour {
 		}
 		sc.sendData ("StartInput");
 		this.camera = GetComponent<Camera> ();
+
+		//print ("192.168.0." + (1 + 1).ToString ());
+		print (Network.player.ipAddress);
 	}
 
 	void OnDestroy(){
@@ -141,11 +144,17 @@ public class game : MonoBehaviour {
 	}
 
 	/*
-	 * Using for RPC sending to client
+	 * Used for network connection
 	 */
 
+	void OnPlayerConnected(NetworkPlayer player){
+		string clientIP = player.ipAddress;
+		string[] spilt = clientIP.Split('.');
+		string clientID = "C" + spilt[spilt.Length-1];
+	}
+
 	[RPC]
-	void ChangeColor(string str){
+	void getData(string str){
 		//Debug.Log ("Do you get anything? " + str);
 	}
 }
