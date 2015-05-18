@@ -126,6 +126,8 @@ public class game : MonoBehaviour {
 			targetY += characters[i].transform.position.y;
 			targetZ += characters[i].transform.position.z;
 
+			//print (targetX + ", " + targetY + ", " + targetZ);
+
 			if(!characters[i].getMoveObject()){
 				objectMove = false;
 			}
@@ -133,11 +135,11 @@ public class game : MonoBehaviour {
 
 		float camSize = 0f;
 		if (!objectMove) {
-			camSize = 5f;
+			camSize = 10f;
 		} else {
 			camSize = (right - left) / 3f;
-			if (camSize <= 1f) {
-				camSize = 1f;
+			if (camSize <= 2f) {
+				camSize = 2f;
 			}
 		}
 

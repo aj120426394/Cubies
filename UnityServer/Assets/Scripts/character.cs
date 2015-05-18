@@ -103,7 +103,27 @@ public class character : MonoBehaviour {
 	}
 
 	/* Finds out when the next object is reached and gives movement options */
-	void OnTriggerEnter2D(Collider2D coll){
+	void OnTriggerEnter(Collider coll){
+
+		if (!coll.name.StartsWith ("C")) {
+			if(coll.name == this.targetObatacle.getName()){
+				if (coll.gameObject.name == "FINISH"){
+					this.inputAble = false;
+					send("GameFin");
+				}else{
+					this.loopPath.Clear();
+					this.speed = 2f;
+					this.inputAble = true;
+					calMovement(moveToObstacle);
+				}
+			}else{
+				int index = this.loopPath.IndexOf(this.moveToObstacle) + 1;
+				if(index < this.loopPath.Count){
+					this.moveToObstacle = this.loopPath.ElementAt(index);
+				}
+			}
+		}
+		/*
 		if (!coll.name.StartsWith ("C")) {
 			if (coll.gameObject.name == "FINISH") {
 				this.inputAble = false;
@@ -123,6 +143,7 @@ public class character : MonoBehaviour {
 				}
 			}
 		}
+		*/
 	}
 
 	/*
