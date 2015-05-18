@@ -24,6 +24,7 @@ public class character : MonoBehaviour {
 
 	private const int fixUpdateInterval = 50;
 	private int fixedUpdate = 0;
+	private bool travling = false;
 
 	void Start(){
 		this.statementList = new List<Statement> ();
@@ -61,12 +62,12 @@ public class character : MonoBehaviour {
 	/* Players every frame */
 	void FixedUpdate() {
 		movePlayer (this.moveToObstacle);
+
+
+		// shininegh color
 		if (this.sameColor) {
 			this.fixedUpdate++;
 		}
-
-		//print ("Time:" + Time.deltaTime);
-		//print ("sameColor: " + this.sameColor + "fixed: " + fixedUpdate);
 		if (this.sameColor && fixedUpdate == fixUpdateInterval) {
 			fixedUpdate = 0;
 			for(int i = 0; i < sameColorList.Count; i++){
@@ -102,9 +103,7 @@ public class character : MonoBehaviour {
 
 	/* Finds out when the next object is reached and gives movement options */
 	void OnTriggerEnter2D(Collider2D coll){
-		if (!coll.name.StartsWith ("C")) {
-			//print ("bumped");
-
+		if (!coll.name.StartsWith ("C") && !travling) {
 			if (coll.gameObject.name == "FINISH") {
 				this.inputAble = false;
 				send("GameFin");
@@ -112,6 +111,9 @@ public class character : MonoBehaviour {
 				this.inputAble = true;
 				calMovement(moveToObstacle);
 			}
+		}
+		if (travling) {
+
 		}
 	}
 
@@ -136,6 +138,8 @@ public class character : MonoBehaviour {
 					moveableObs.Add("L",lresult);
 					lresult.highlight();
 					send("L");
+
+					this.loopPath.IndexOf(lresult);
 				}
 			}
 		}
@@ -143,8 +147,8 @@ public class character : MonoBehaviour {
 		foreach (char ch in c) {
 			result += ch;
 		}
-		foreach (obstacle o in connObs) {
 
+		foreach (obstacle o in connObs) {
 			if(result.Contains(o.getTag())){
 				if(moveableObs.ContainsKey(o.getTag())){
 					print ("test" + o.getTag());

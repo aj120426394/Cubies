@@ -29,9 +29,21 @@ public class game : MonoBehaviour {
 		}
 		sc.sendData ("StartInput");
 		this.camera = GetComponent<Camera> ();
+		/*
+		List<string> test = new List<string> ();
+		test.Add ("a");
+		test.Add ("b");
+		test.Add ("c");
+		test.Add ("d");
+		test.Add ("e");
 
-		//print ("192.168.0." + (1 + 1).ToString ());
-		print (Network.player.ipAddress);
+		int i = test.IndexOf("c");
+		test.RemoveRange (i+1, test.Count - i-1);
+		foreach (string s in test) {
+			print (s);
+		}
+*/
+
 	}
 
 	void OnDestroy(){

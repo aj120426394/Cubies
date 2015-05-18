@@ -24,12 +24,12 @@ public class obstacle : MonoBehaviour {
 		lr.SetColors (Color.white, Color.white);
 		lr.SetVertexCount (obs.Length*2);
 
-		drawLine ();
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		drawLine ();
 	}
 
 	public string getName(){
