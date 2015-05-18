@@ -93,9 +93,9 @@ public class game : MonoBehaviour {
 			print ("space");
 			foreach(character c in characters){
 				c.setGameStart(true);
-				string tmp = "GameStart";
-				this.sc.sendData(tmp);
 			}
+			string tmp = "GameStart";
+			this.sc.sendData(tmp);
 			this.gamestart = true;
 		}
 	}
@@ -159,11 +159,6 @@ public class game : MonoBehaviour {
 	 * Used for network connection
 	 */
 
-	void OnPlayerConnected(NetworkPlayer player){
-		string clientIP = player.ipAddress;
-		string[] spilt = clientIP.Split('.');
-		string clientID = "C" + spilt[spilt.Length-1];
-	}
 
 	[RPC]
 	void getData(string str){

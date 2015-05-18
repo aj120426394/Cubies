@@ -7,6 +7,7 @@ public class character : MonoBehaviour {
 
 	public obstacle startObstacle;
 	private obstacle moveToObstacle;
+	private obstacle targetObatacle;
 
 	private string newStatement = "";
 	private Dictionary<string, obstacle> moveableObs;
@@ -24,7 +25,7 @@ public class character : MonoBehaviour {
 
 	private const int fixUpdateInterval = 50;
 	private int fixedUpdate = 0;
-	private bool travling = false;
+	private float speed = 2f;
 
 	void Start(){
 		this.statementList = new List<Statement> ();
@@ -32,6 +33,7 @@ public class character : MonoBehaviour {
 		this.loopPath = new List<obstacle> ();
 		this.moveableObs = new Dictionary<string, obstacle> ();
 		this.moveToObstacle = startObstacle;
+		this.targetObatacle = startObstacle;
 
 		lr = gameObject.AddComponent<LineRenderer>();
 		lr.SetWidth ((float)0.05, (float)0.05);
@@ -87,10 +89,9 @@ public class character : MonoBehaviour {
 		//gets next objects possition
 		float xPos = obs.transform.position.x;
 		float yPos = obs.transform.position.y;
-		float speed = 2f;
 		Vector3 newPos = new Vector3 (xPos, yPos, 0.0f);
 		
-		float step = speed * Time.deltaTime;
+		float step = this.speed * Time.deltaTime;
 
 		if (moveObject == true) {
 			transform.position = Vector3.MoveTowards(transform.position, newPos, step);
@@ -103,17 +104,24 @@ public class character : MonoBehaviour {
 
 	/* Finds out when the next object is reached and gives movement options */
 	void OnTriggerEnter2D(Collider2D coll){
-		if (!coll.name.StartsWith ("C") && !travling) {
+		if (!coll.name.StartsWith ("C")) {
 			if (coll.gameObject.name == "FINISH") {
 				this.inputAble = false;
 				send("GameFin");
 			} else {
-				this.inputAble = true;
-				calMovement(moveToObstacle);
+				if(coll.name == this.targetObatacle.getName()){
+					//this.travling = false;
+					this.loopPath.Clear();
+					this.speed = 2f;
+					this.inputAble = true;
+					calMovement(moveToObstacle);
+				}else{
+					int index = this.loopPath.IndexOf(this.moveToObstacle) + 1;
+					if(index < this.loopPath.Count){
+						this.moveToObstacle = this.loopPath.ElementAt(index);
+					}
+				}
 			}
-		}
-		if (travling) {
-
 		}
 	}
 
@@ -231,7 +239,14 @@ public class character : MonoBehaviour {
 				}
 			} else {
 				if(moveableObs.ContainsKey(command)){
-					this.moveToObstacle = moveableObs[command];
+					if(command.Contains("L")){
+						this.moveToObstacle = this.loopPath.ElementAt(1);
+						this.targetObatacle = moveableObs[command];
+						this.speed = 8f;
+					}else{
+						this.moveToObstacle = moveableObs[command];
+						this.targetObatacle = this.moveToObstacle;
+					}
 					this.moveObject = true;
 					this.inputAble = false;
 					foreach(obstacle o in moveableObs.Values){
@@ -240,7 +255,7 @@ public class character : MonoBehaviour {
 					this.sameColorList.Clear();
 					this.sameColor = false;
 					this.moveableObs.Clear();
-					this.loopPath.Clear();
+
 				}
 			}
 		}
