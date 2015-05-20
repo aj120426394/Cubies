@@ -13,8 +13,11 @@ public class CircularMovement : MonoBehaviour  {
 	}
 	
 	void Update () {
+
+	}
+
+	void FixedUpdate(){
 		v = Quaternion.AngleAxis (degreesPerSecond * Time.deltaTime, Vector3.forward) * v;
 		transform.position = center.position + v;
-	
 	}
 }

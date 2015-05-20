@@ -19,6 +19,13 @@
 #include <Mirf.h>
 #include <nRF24L01.h>
 #include <MirfHardwareSpiDriver.h>
+#include <Adafruit_NeoPixel.h>
+#include <avr/power.h>
+
+#define LEDPIN         6
+#define NUMPIXELS      2
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, LEDPIN, NEO_GRB + NEO_KHZ800);
+
 
 const byte CLIENTNAME = (byte)0xC1;
 
@@ -77,6 +84,7 @@ void setup(){
   attachInterrupt(buttonOR, bState1, HIGH);
 
   Serial.begin(9600);
+  pixels.begin();
   
   Mirf.spi = &MirfHardwareSpi;
   Mirf.init();
@@ -328,6 +336,8 @@ void dataGet(byte str){
     stateChange(2);
   }else if(str == (byte)0xEE){
     inputable = true;
+    gameStart = false;
+    stateChange(1);
   }else if(str == (byte)0xDD){
     inputable = false;
     gameStart = false;
@@ -369,3 +379,48 @@ void checkReset(){
   checkYELLOW = false;
   checkPURPLE = false;
 }
+void LEDcontroller(){
+  if(checkIF){
+    pixels.setPixelColor(0, pixels.Color(255,255,255));
+  }
+  if(checkOR){
+    pixels.setPixelColor(1, pixels.Color(255,255,255));
+  }
+  if(checkTHEN){
+    pixels.setPixelColor(2, pixels.Color(255,255,255));
+  }
+  if(checkENTER){
+    pixels.setPixelColor(3, pixels.Color(255,255,255));
+  }
+  if(checkNOT){
+    pixels.setPixelColor(4, pixels.Color(255,255,255));
+  }
+  if(checkLOOP){
+    pixels.setPixelColor(5, pixels.Color(255,255,255));
+  }
+  
+  if(checkRED){
+    pixels.setPixelColor(0, pixels.Color(255,0,0));
+  }
+  if(checkBLUE){
+    pixels.setPixelColor(1, pixels.Color(0,255,0));
+  }
+  if(checkGREEN){
+    pixels.setPixelColor(2, pixels.Color(0,0,255));
+  }
+  if(checkYELLOW){
+    pixels.setPixelColor(3, pixels.Color(255,255,0));
+  }
+  if(checkPURPLE){
+    if(checkLOOP){
+      pixels.setPixelColor(4, pixels.Color(255,0,255));
+    }else if(checkNOT){
+      pixels.setPixelColor(5, pixels.Color(255,0,255));
+    }
+    
+  }
+
+  
+  
+}
+

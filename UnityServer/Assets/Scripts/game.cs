@@ -21,7 +21,7 @@ public class game : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		print ("GAME RULES: I = if T = then  B = blue  R = Red G = green  Y = yellow");
-		sc = new SerialConn ("/dev/cu.usbmodem330471", 9600);
+		sc = new SerialConn ("/dev/cu.usbmodem330461", 9600);
 		nc = new NetworkConnection (GetComponent<NetworkView> ());
 		nc.OpenConnection ();
 		foreach (character c in characters) {

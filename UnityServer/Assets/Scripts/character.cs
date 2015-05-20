@@ -19,13 +19,14 @@ public class character : MonoBehaviour {
 	private bool inputAble = true;		//Controller to albe input the data.
 	private bool moveObject = false;	//Flag to show if the character is moving.
 	private bool sameColor = false;		//Controller to trigger the same color condition.
+	private bool planetTrigger = false;
 
 	private SerialConn sc;
 	private LineRenderer lr;
 
 	private const int fixUpdateInterval = 50;
 	private int fixedUpdate = 0;
-	private float speed = 2f;
+	private float speed = 2.5f;
 
 	void Start(){
 		this.statementList = new List<Statement> ();
@@ -42,6 +43,7 @@ public class character : MonoBehaviour {
 		lr.SetVertexCount (2);
 
 		drawline (startObstacle.transform.position);
+
 	}
 	/*
 	 * Connecting SerialConnection from global class
@@ -89,16 +91,28 @@ public class character : MonoBehaviour {
 		//gets next objects possition
 		float xPos = obs.transform.position.x;
 		float yPos = obs.transform.position.y;
-		Vector3 newPos = new Vector3 (xPos, yPos, 0.0f);
+		Vector3 newPos = new Vector3 (xPos, yPos, -1.5f);
 		
 		float step = this.speed * Time.deltaTime;
 
 		if (moveObject == true) {
-			transform.position = Vector3.MoveTowards(transform.position, newPos, step);
+			this.planetTrigger = false;
+			transform.position = Vector3.MoveTowards (transform.position, newPos, step);
+			this.speed += 0.05f;
+		} 
+
+		if (this.planetTrigger) {
+			this.transform.position = this.moveToObstacle.transform.position - new Vector3(0f,0f,1.5f);
 		}
 
-		if (transform.position == newPos) {
+		if (transform.position.x == newPos.x && transform.position.y == newPos.y) {
 			this.moveObject = false;
+			this.planetTrigger = true;
+			this.speed = 2.5f;
+
+
+			//this.transform.position.x = this.moveToObstacle.transform.position.x;
+			//this.transform.position.y = this.moveToObstacle.transform.position.y;
 		}
 	}
 
@@ -112,7 +126,7 @@ public class character : MonoBehaviour {
 					send("GameFin");
 				}else{
 					this.loopPath.Clear();
-					this.speed = 2f;
+					//this.speed = 2.5f;
 					this.inputAble = true;
 					calMovement(moveToObstacle);
 				}
@@ -122,6 +136,10 @@ public class character : MonoBehaviour {
 					this.moveToObstacle = this.loopPath.ElementAt(index);
 				}
 			}
+			//this.planetTrigger = true;
+			//this.transform.position = this.moveToObstacle.transform.position - new Vector3(0f,0f,1.5f);
+			//this.transform.position.x = this.moveToObstacle.transform.position.x;
+			//this.transform.position.y = this.moveToObstacle.transform.position.y;
 		}
 		/*
 		if (!coll.name.StartsWith ("C")) {
