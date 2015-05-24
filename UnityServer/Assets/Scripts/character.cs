@@ -6,6 +6,7 @@ using System.Linq;
 public class character : MonoBehaviour {
 
 	public obstacle startObstacle;
+	public obstacle finishObstacle;
 	private obstacle moveToObstacle;
 	private obstacle targetObatacle;
 
@@ -43,6 +44,14 @@ public class character : MonoBehaviour {
 		lr.SetVertexCount (2);
 
 		drawline (startObstacle.transform.position);
+
+		this.transform.LookAt (startObstacle.transform.position - new Vector3 (0f, 0f, 1.5f));
+		if(transform.position.x > moveToObstacle.transform.position.x){
+			this.transform.Rotate (transform.rotation.x, transform.rotation.y, 180);
+		}
+		//this.transform.Rotate (transform.rotation.x, transform.rotation.y, 150);
+		//this.transform.Rotate (transform.rotation.x, transform.rotation.y, 20);
+
 
 	}
 	/*
@@ -98,6 +107,10 @@ public class character : MonoBehaviour {
 		if (moveObject == true) {
 			this.planetTrigger = false;
 			transform.position = Vector3.MoveTowards (transform.position, newPos, step);
+			transform.LookAt(this.moveToObstacle.transform.position - new Vector3(0f,0f,1.5f));
+			if(transform.position.x > moveToObstacle.transform.position.x){
+				this.transform.Rotate (transform.rotation.x, transform.rotation.y, 180);
+			}
 			this.speed += 0.05f;
 		} 
 
@@ -121,7 +134,7 @@ public class character : MonoBehaviour {
 
 		if (!coll.name.StartsWith ("C")) {
 			if(coll.name == this.targetObatacle.getName()){
-				if (coll.gameObject.name == "FINISH"){
+				if (coll.gameObject.name == this.finishObstacle.getName()){
 					this.inputAble = false;
 					send("GameFin");
 				}else{

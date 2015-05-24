@@ -1,53 +1,50 @@
 ﻿using UnityEngine;
+using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 
 public class game : MonoBehaviour {
 	public float speed = 0.5f;
+	public obstacle startPlanet;
+	public obstacle finishPlanet;
 
 	public character[] characters;
 	private bool gamestart = false;
-
-	
-	private List<string> newFunction;
-	private List<List<string>> functionList;
 	
 	private SerialConn sc;
 	private character c1;
-	private NetworkConnection nc;
+	private NetworkConn networkConn;
 
 	private Camera camera;
 
 	// Use this for initialization
 	void Start () {
 		print ("GAME RULES: I = if T = then  B = blue  R = Red G = green  Y = yellow");
-		sc = new SerialConn ("/dev/cu.usbmodem330461", 9600);
-		nc = new NetworkConnection (GetComponent<NetworkView> ());
-		nc.OpenConnection ();
+		sc = new SerialConn ("/dev/cu.usbmodem330471", 9600);
 		foreach (character c in characters) {
 			c.setSerialConnection (this.sc);
 		}
 		sc.sendData ("StartInput");
 		this.camera = GetComponent<Camera> ();
+
+
+		this.networkConn = (NetworkConn)GameObject.Find ("NetworkConnection").GetComponent<NetworkConn> ();
+
 		/*
-		List<string> test = new List<string> ();
-		test.Add ("a");
-		test.Add ("b");
-		test.Add ("c");
-		test.Add ("d");
-		test.Add ("e");
+		 * the code of adding new character.
 
-		int i = test.IndexOf("c");
-		test.RemoveRange (i+1, test.Count - i-1);
-		foreach (string s in test) {
-			print (s);
-		}
-*/
+		Object prefab = AssetDatabase.LoadAssetAtPath ("Assets/Prefab/Ship.prefab", typeof(GameObject));
+		GameObject testPrefab = (GameObject)Instantiate (prefab, new Vector3 (-17.4f, 5.6f, -1.5f), Quaternion.identity);
 
-	}
+		GameObject test = GameObject.Find("START");
+		obstacle testObs = (obstacle)test.GetComponent<obstacle> ();
 
-	void OnDestroy(){
-		nc.CloseConnection ();
+		testPrefab.GetComponent<character> ().startObstacle = startPlanet;
+		testPrefab.GetComponent<character> ().finishObstacle = finishPlanet;
+		testPrefab.name = "C2";
+
+		*/
+
 	}
 
 	public int updateInterval = 4; //the delay between updates
@@ -69,7 +66,7 @@ public class game : MonoBehaviour {
 			if(data.Length > 0){
 				//print ("In coming data: " + data);
 				inputFunctions (data);
-				nc.sendData(data);
+				networkConn.sendData(data);
 			}
 			updateSlower = 0;
 		}
@@ -162,8 +159,5 @@ public class game : MonoBehaviour {
 	 */
 
 
-	[RPC]
-	void getData(string str){
-		//Debug.Log ("Do you get anything? " + str);
-	}
+
 }
