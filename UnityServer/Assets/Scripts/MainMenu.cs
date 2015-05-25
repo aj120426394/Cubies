@@ -15,8 +15,8 @@ public class MainMenu : MonoBehaviour {
 	void Start () {
 		this.serialConn = new SerialConn ();
 		this.networkConn = (NetworkConn)GameObject.Find ("NetworkConnection").GetComponent<NetworkConn> ();
-		serialConn.sendData ("shipColor");
 		this.clientNum = networkConn.getCleintNum ();
+		serialConn.broadcastData (clientNum, "shipColor");
 	}
 	
 	// Update is called once per frame

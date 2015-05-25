@@ -80,7 +80,7 @@ void loop(){
   // Read from Serial
   if(Serial.available() > 0){
     int lf = 10;
-    Serial.readBytesUntil(lf,serialData,11);
+    Serial.readBytesUntil(lf,serialData,15);
     char* client;
     if(strstr(serialData, "C1") != NULL){
       client = "clie1";
@@ -90,6 +90,8 @@ void loop(){
       client = "clie3";
     }
     
+    sendData(client, serialData);
+    /*
     if(strstr(serialData,"GameStart") != NULL){
       int x;
       for(x = 0; x < numOfClient; x++){
@@ -113,6 +115,7 @@ void loop(){
     }else{
       sendData(client, serialData);
     }
+    */
     Serial.flush();
   }
 }

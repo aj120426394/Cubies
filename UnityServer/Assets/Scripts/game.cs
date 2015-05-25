@@ -16,6 +16,8 @@ public class game : MonoBehaviour {
 
 	private Camera camera;
 
+	private int characterNum;
+
 	// Use this for initialization
 	void Start () {
 		/*
@@ -34,8 +36,8 @@ public class game : MonoBehaviour {
 
 
 
-		int characNum = PlayerPrefs.GetInt("clientNum");
-		for (int i = 0; i < characNum; i++) {
+		characterNum = PlayerPrefs.GetInt("clientNum");
+		for (int i = 0; i < characterNum; i++) {
 			string charName = "C" + (i+1);
 			string shipColor = PlayerPrefs.GetString(charName);
 			print(shipColor);
@@ -55,7 +57,8 @@ public class game : MonoBehaviour {
 		foreach (character c in characters.Values) {
 			c.setSerialConnection (this.serialConn);
 		}
-		serialConn.sendData ("StartInput");
+	
+		serialConn.broadcastData (characterNum, "StartInput");
 		this.camera = GetComponent<Camera> ();
 
 
@@ -104,8 +107,7 @@ public class game : MonoBehaviour {
 			foreach(character c in characters.Values){
 				c.setGameStart(true);
 			}
-			string tmp = "GameStart";
-			this.serialConn.sendData(tmp);
+			this.serialConn.broadcastData(this.characterNum,"GameStart");
 			this.gamestart = true;
 		}
 	}
