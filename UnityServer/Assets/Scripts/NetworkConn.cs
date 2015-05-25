@@ -6,6 +6,7 @@ public class NetworkConn : MonoBehaviour {
 
 	private int Port = 25001;
 	private Dictionary<string, string> client;
+	private int clientNum = 0;
 	
 	
 	// Use this for initialization
@@ -24,6 +25,11 @@ public class NetworkConn : MonoBehaviour {
 	void Update () {
 		
 	}
+
+	void OnPlayerConnected(NetworkPlayer player){
+		this.clientNum += 1;
+		PlayerPrefs.SetInt("clientNum", this.clientNum);
+	}
 	
 	private void OpenConnection(){
 		if (Network.peerType == NetworkPeerType.Disconnected) {
@@ -40,6 +46,10 @@ public class NetworkConn : MonoBehaviour {
 
 	public void sendData(string str){
 		this.GetComponent<NetworkView>().RPC("getData", RPCMode.All, str);
+	}
+
+	public int getCleintNum(){
+		return this.clientNum;
 	}
 
 	[RPC]

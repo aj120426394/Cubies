@@ -54,6 +54,7 @@ boolean checkPURPLE = false;
 
 boolean gameStart = false;
 boolean inputable = false;
+boolean shipColor = false;
 
 // check the command has been pressed
 boolean pressTHEN = false;
@@ -104,6 +105,8 @@ void loop(){
     Serial.println(data[0],HEX);
     dataGet(data[0]);
   }
+  
+  LEDcontroller();
   delay(100);
 } 
 //initial setting of the button
@@ -332,33 +335,66 @@ void dataSending(byte str){
 }
 void dataGet(byte str){
   if(str == (byte)0xFF){
+    //game start
     gameStart = true;
+    inputable = true;
+    shipColor = false;
     stateChange(2);
   }else if(str == (byte)0xEE){
+    //start input
     inputable = true;
     gameStart = false;
+    shipColor = false;
     stateChange(1);
   }else if(str == (byte)0xDD){
+    //Game finish
     inputable = false;
     gameStart = false;
+    shipColor = false;
     stateChange(1);
+  }else if(str == (byte)0xCC){
+    //select ship color
+    inputable = false;
+    gameStart = false;
+    shipColor = true;
+    stateChange(2);
   }
   
   if(str == (byte)0x06){
-    checkRED = true;
-    Serial.println("LED:RED");
+    if(shipColor){
+      checkRED = false;
+    }else{
+      checkRED = true;
+      Serial.println("LED:RED");
+    }
   }else if(str == (byte)0x07){
-    checkBLUE = true;
-    Serial.println("LED:BLUE");
+    if(shipColor){
+      checkBLUE = false;
+    }else{
+      checkBLUE = true;
+      Serial.println("LED:BLUE");
+    }
   }else if(str == (byte)0x08){
-    checkGREEN = true;
-    Serial.println("LED:GREEN");
+    if(shipColor){
+      checkGREEN = false;
+    }else{
+      checkGREEN = true;
+      Serial.println("LED:GREEN");
+    }
   }else if(str == (byte)0x09){
-    checkYELLOW = true;
-    Serial.println("LED:YELLOW");
+    if(shipColor){
+      checkYELLOW = false;
+    }else{
+      checkYELLOW = true;
+      Serial.println("LED:YELLOW");
+    }
   }else if(str == (byte)0x0A){
-    checkPURPLE = true;
-    Serial.println("LED:PURPLE");
+    if(shipColor){
+      checkPURPLE = false;
+    }else{
+      checkPURPLE = true;
+      Serial.println("LED:PURPLE");
+    }
   }else if(str == (byte)0x04){
     checkLOOP = true;
     Serial.println("LED:LOOP");
@@ -419,8 +455,6 @@ void LEDcontroller(){
     }
     
   }
-
-  
-  
+  pixels.show();
 }
 

@@ -7,14 +7,11 @@ public class game : MonoBehaviour {
 	public float speed = 0.5f;
 	public obstacle startPlanet;
 	public obstacle finishPlanet;
-
-	//public character[] characters;
-	//private Dictionary<string, character> characters;
-	private List<character> characters;
+	
+	private Dictionary<string, character> characters;
 	private bool gamestart = false;
 	
-	private SerialConn sc;
-	private character c1;
+	private SerialConn serialConn;
 	private NetworkConn networkConn;
 
 	private Camera camera;
@@ -24,53 +21,44 @@ public class game : MonoBehaviour {
 		/*
 		 * Testing playerpref
 		 */
-		PlayerPrefs.SetInt ("playerNum", 1);
-		PlayerPrefs.SetString("C1", "B");
-		PlayerPrefs.SetString("C2", "R");
+
+		PlayerPrefs.SetInt ("clientNum", 1);
+		PlayerPrefs.SetString ("C1", "P");
 
 		print ("GAME RULES: I = if T = then  B = blue  R = Red G = green  Y = yellow");
-		this.sc = new SerialConn ("/dev/cu.usbmodem330471", 9600);
+
+		this.serialConn = new SerialConn ();
 		this.networkConn = (NetworkConn)GameObject.Find ("NetworkConnection").GetComponent<NetworkConn> ();
-		//this.characters = new Dictionary<string, character> ();
-		this.characters = new List<character> ();
-		int characNum = PlayerPrefs.GetInt("playerNum");
+
+		this.characters = new Dictionary<string, character> ();
 
 
+
+		int characNum = PlayerPrefs.GetInt("clientNum");
 		for (int i = 0; i < characNum; i++) {
 			string charName = "C" + (i+1);
 			string shipColor = PlayerPrefs.GetString(charName);
 			print(shipColor);
+			string prefabAddr = "Assets/Prefab/"+shipColor + "_ship.prefab";
 
-			Object prefab = AssetDatabase.LoadAssetAtPath ("Assets/Prefab/Ship.prefab", typeof(GameObject));
-			GameObject testPrefab = (GameObject)Instantiate (prefab, new Vector3 (-17.4f, 5.6f, -1.5f), Quaternion.identity);
+			Object shipPrefab = AssetDatabase.LoadAssetAtPath (prefabAddr, typeof(GameObject));
+			GameObject shipObject = (GameObject)Instantiate (shipPrefab, new Vector3 (-17.4f, 5.6f, -1.7f), Quaternion.identity);
+
+			character ship = shipObject.GetComponent<character>();
+
+			ship.startObstacle = startPlanet;
+			ship.finishObstacle = finishPlanet;
+			ship.name = charName;
+			this.characters.Add(charName, ship);
 		}
 
-		foreach (character c in characters) {
-			c.setSerialConnection (this.sc);
+		foreach (character c in characters.Values) {
+			c.setSerialConnection (this.serialConn);
 		}
-		sc.sendData ("StartInput");
+		serialConn.sendData ("StartInput");
 		this.camera = GetComponent<Camera> ();
 
 
-
-
-
-
-
-		/*
-		 * the code of adding new character.
-
-		Object prefab = AssetDatabase.LoadAssetAtPath ("Assets/Prefab/Ship.prefab", typeof(GameObject));
-		GameObject testPrefab = (GameObject)Instantiate (prefab, new Vector3 (-17.4f, 5.6f, -1.5f), Quaternion.identity);
-
-		GameObject test = GameObject.Find("START");
-		obstacle testObs = (obstacle)test.GetComponent<obstacle> ();
-
-		testPrefab.GetComponent<character> ().startObstacle = startPlanet;
-		testPrefab.GetComponent<character> ().finishObstacle = finishPlanet;
-		testPrefab.name = "C2";
-
-		*/
 
 	}
 
@@ -79,16 +67,14 @@ public class game : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		//inputFunctions2 ();
 
 		if (gamestart) {
 			calCamera();
 		}
-		//calCamera();
 
 		updateSlower ++; //Recieve data every 4 frames
 		if(updateSlower >= updateInterval){ //
-			string data = sc.recieveData ();
+			string data = serialConn.recieveData ();
 			//string data = "";
 			if(data.Length > 0){
 				//print ("In coming data: " + data);
@@ -108,18 +94,18 @@ public class game : MonoBehaviour {
 		string command = spilt[1].Remove(1);
 
 		int i = int.Parse(from.Substring(1))-1;
-		character client = characters[i];
+		character client = this.characters[from];
 		client.input(command);
 	}
 	
 	void inputFunctions2(){
 		if (Input.GetKeyDown (KeyCode.Space)) {
 			print ("space");
-			foreach(character c in characters){
+			foreach(character c in characters.Values){
 				c.setGameStart(true);
 			}
 			string tmp = "GameStart";
-			this.sc.sendData(tmp);
+			this.serialConn.sendData(tmp);
 			this.gamestart = true;
 		}
 	}
@@ -134,27 +120,29 @@ public class game : MonoBehaviour {
 
 		bool objectMove = true;
 		// Calculate the size of cam
-		for (int i = 0; i < characters.Count; i++) {
+		int i = 0;
+		foreach (character c in characters.Values) {
 			if(i == 0){
-				right = characters[i].transform.position.x;
-				left = characters[i].transform.position.x;
+				right = c.transform.position.x;
+				left = c.transform.position.x;
 			}else{
-				if(characters[i].transform.position.x > right){
-					right = characters[i].transform.position.x;
+				if(c.transform.position.x > right){
+					right = c.transform.position.x;
 				}
-				if(characters[i].transform.position.x < left){
-					left = characters[i].transform.position.x;
+				if(c.transform.position.x < left){
+					left = c.transform.position.x;
 				}
 			}
-			targetX += characters[i].transform.position.x;
-			targetY += characters[i].transform.position.y;
-			targetZ += characters[i].transform.position.z;
-
+			targetX += c.transform.position.x;
+			targetY += c.transform.position.y;
+			targetZ += c.transform.position.z;
+			
 			//print (targetX + ", " + targetY + ", " + targetZ);
-
-			if(!characters[i].getMoveObject()){
+			
+			if(!c.getMoveObject()){
 				objectMove = false;
 			}
+			i++;
 		}
 
 		float camSize = 0f;

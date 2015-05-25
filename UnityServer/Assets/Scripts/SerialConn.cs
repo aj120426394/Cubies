@@ -17,9 +17,9 @@ public class SerialConn
 {
 	private SerialPort sp;
 
-	public SerialConn (string port, int bund)
+	public SerialConn ()
 	{
-		this.sp = new SerialPort (port, bund);
+		this.sp = new SerialPort ("/dev/cu.usbmodem330471", 9600);
 		//this.sp.ReadTimeout = 1;
 
 		OpenConnection();
@@ -87,6 +87,16 @@ public class SerialConn
 		*/
 		this.sp.WriteLine (data);
 		Debug.Log(data);
+	}
+
+	public void broadcastData(int numOfClient, string command){
+		for (int i = 0; i < numOfClient; i++) {
+			string clientName = "C" + (i+1);
+			string data = clientName + ":" + command;
+			this.sp.WriteLine (data);
+			Debug.Log(data);
+		}
+
 	}
 }
 

@@ -105,6 +105,11 @@ void loop(){
       for(x = 0; x < numOfClient; x++){
         sendData(clients[x], "GameFin");
       }
+    }else if(strstr(serialData,"ShipColor") != NULL){
+      int x;
+      for(x = 0; x < numOfClient; x++){
+        sendData(clients[x], "ShipColor");
+      }
     }else{
       sendData(client, serialData);
     }
@@ -122,6 +127,8 @@ void sendData(char* client, char* sendingData){
     sendData[0] = (byte)0xEE;
   }else if(strstr(sendingData, "GameFin") != NULL){
     sendData[0] = (byte)0xDD;
+  }else if(strstr(sendingData, "ShipColor") != NULL){
+    sendData[0] = (byte)0xCC;
   }else if(strstr(sendingData, "R") != NULL){
     sendData[0] = (byte)0x06;
   }else if(strstr(sendingData, "B") != NULL){

@@ -28,6 +28,7 @@ public class character : MonoBehaviour {
 	private const int fixUpdateInterval = 50;
 	private int fixedUpdate = 0;
 	private float speed = 2.5f;
+	private float axisZ = 1.7f; //Controller of the hieght of the ship.
 
 	void Start(){
 		this.statementList = new List<Statement> ();
@@ -45,7 +46,7 @@ public class character : MonoBehaviour {
 
 		drawline (startObstacle.transform.position);
 
-		this.transform.LookAt (startObstacle.transform.position - new Vector3 (0f, 0f, 1.5f));
+		this.transform.LookAt (startObstacle.transform.position - new Vector3 (0f, 0f, axisZ));
 		if(transform.position.x > moveToObstacle.transform.position.x){
 			this.transform.Rotate (transform.rotation.x, transform.rotation.y, 180);
 		}
@@ -100,14 +101,14 @@ public class character : MonoBehaviour {
 		//gets next objects possition
 		float xPos = obs.transform.position.x;
 		float yPos = obs.transform.position.y;
-		Vector3 newPos = new Vector3 (xPos, yPos, -1.5f);
+		Vector3 newPos = new Vector3 (xPos, yPos, -1.7f);
 		
 		float step = this.speed * Time.deltaTime;
 
 		if (moveObject == true) {
 			this.planetTrigger = false;
 			transform.position = Vector3.MoveTowards (transform.position, newPos, step);
-			transform.LookAt(this.moveToObstacle.transform.position - new Vector3(0f,0f,1.5f));
+			transform.LookAt(this.moveToObstacle.transform.position - new Vector3(0f,0f,axisZ));
 			if(transform.position.x > moveToObstacle.transform.position.x){
 				this.transform.Rotate (transform.rotation.x, transform.rotation.y, 180);
 			}
@@ -115,7 +116,7 @@ public class character : MonoBehaviour {
 		} 
 
 		if (this.planetTrigger) {
-			this.transform.position = this.moveToObstacle.transform.position - new Vector3(0f,0f,1.5f);
+			this.transform.position = this.moveToObstacle.transform.position - new Vector3(0f,0f,axisZ);
 		}
 
 		if (transform.position.x == newPos.x && transform.position.y == newPos.y) {
@@ -281,7 +282,6 @@ public class character : MonoBehaviour {
 	 */
 	public void input(string command){
 		if (inputAble) {
-			print ("C1 get: " + command);
 			if (!gameStart) {
 				newStatement += command;
 				if (newStatement.Contains("E")) {

@@ -32,7 +32,7 @@ public class menuLoad : MonoBehaviour {
 		newPos = new Vector3(xPos, yPos, 0.0f);
 
 		this.planet = GameObject.Find("Menu Planet");
-		print (this.planet.name);
+		//print (this.planet.name);
 	}
 
 	public void LoadLevel(int level){
