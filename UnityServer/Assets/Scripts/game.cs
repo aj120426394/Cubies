@@ -20,15 +20,23 @@ public class game : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		print ("GAME RULES: I = if T = then  B = blue  R = Red G = green  Y = yellow");
-		sc = new SerialConn ("/dev/cu.usbmodem330471", 9600);
+		this.sc = new SerialConn ("/dev/cu.usbmodem330471", 9600);
+		this.networkConn = (NetworkConn)GameObject.Find ("NetworkConnection").GetComponent<NetworkConn> ();
+
 		foreach (character c in characters) {
 			c.setSerialConnection (this.sc);
 		}
 		sc.sendData ("StartInput");
 		this.camera = GetComponent<Camera> ();
 
+		/*
+		 * Testing playerpref
+		 */
+		PlayerPrefs.SetInt ("playerNum", 1);
+		PlayerPrefs.SetString("C1","B");
 
-		this.networkConn = (NetworkConn)GameObject.Find ("NetworkConnection").GetComponent<NetworkConn> ();
+
+
 
 		/*
 		 * the code of adding new character.
