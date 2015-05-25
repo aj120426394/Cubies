@@ -8,7 +8,9 @@ public class game : MonoBehaviour {
 	public obstacle startPlanet;
 	public obstacle finishPlanet;
 
-	public character[] characters;
+	//public character[] characters;
+	//private Dictionary<string, character> characters;
+	private List<character> characters;
 	private bool gamestart = false;
 	
 	private SerialConn sc;
@@ -19,9 +21,29 @@ public class game : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		/*
+		 * Testing playerpref
+		 */
+		PlayerPrefs.SetInt ("playerNum", 1);
+		PlayerPrefs.SetString("C1", "B");
+		PlayerPrefs.SetString("C2", "R");
+
 		print ("GAME RULES: I = if T = then  B = blue  R = Red G = green  Y = yellow");
 		this.sc = new SerialConn ("/dev/cu.usbmodem330471", 9600);
 		this.networkConn = (NetworkConn)GameObject.Find ("NetworkConnection").GetComponent<NetworkConn> ();
+		//this.characters = new Dictionary<string, character> ();
+		this.characters = new List<character> ();
+		int characNum = PlayerPrefs.GetInt("playerNum");
+
+
+		for (int i = 0; i < characNum; i++) {
+			string charName = "C" + (i+1);
+			string shipColor = PlayerPrefs.GetString(charName);
+			print(shipColor);
+
+			Object prefab = AssetDatabase.LoadAssetAtPath ("Assets/Prefab/Ship.prefab", typeof(GameObject));
+			GameObject testPrefab = (GameObject)Instantiate (prefab, new Vector3 (-17.4f, 5.6f, -1.5f), Quaternion.identity);
+		}
 
 		foreach (character c in characters) {
 			c.setSerialConnection (this.sc);
@@ -29,11 +51,8 @@ public class game : MonoBehaviour {
 		sc.sendData ("StartInput");
 		this.camera = GetComponent<Camera> ();
 
-		/*
-		 * Testing playerpref
-		 */
-		PlayerPrefs.SetInt ("playerNum", 1);
-		PlayerPrefs.SetString("C1","B");
+
+
 
 
 
@@ -115,7 +134,7 @@ public class game : MonoBehaviour {
 
 		bool objectMove = true;
 		// Calculate the size of cam
-		for (int i = 0; i < characters.Length; i++) {
+		for (int i = 0; i < characters.Count; i++) {
 			if(i == 0){
 				right = characters[i].transform.position.x;
 				left = characters[i].transform.position.x;
@@ -150,9 +169,9 @@ public class game : MonoBehaviour {
 
 		this.camera.orthographicSize = Mathf.MoveTowards (this.camera.orthographicSize, camSize, 2.0f * Time.deltaTime);
 
-		targetX = targetX / characters.Length;
-		targetY = targetY / characters.Length;
-		targetZ = targetZ / characters.Length;
+		targetX = targetX / characters.Count;
+		targetY = targetY / characters.Count;
+		targetZ = targetZ / characters.Count;
 
 		Vector3 target = new Vector3 (targetX, targetY, targetZ);
 

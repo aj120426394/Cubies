@@ -9,11 +9,18 @@ public class loadScene : MonoBehaviour {
 	public Text textField;
 	
 	//which ships have been taken
-	private bool blueShip, redShip, yellowShip, greenShip = true;
-	
-	void Update(){
+	private bool blueShip, redShip, yellowShip, greenShip;
 
-		if (blueShip == true) {
+	void Start(){
+		this.blueShip = true;
+		this.redShip = true;
+		this.yellowShip = true;
+		this.greenShip = true;
+	}
+	
+	void FixedUpdate(){
+
+		if (Input.GetKeyDown(KeyCode.B ) && blueShip == true) {
 			changeCubeColor("b");
 			print ("print");
 		}

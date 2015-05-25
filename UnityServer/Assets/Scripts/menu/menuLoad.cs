@@ -5,7 +5,7 @@ public class menuLoad : MonoBehaviour {
 
 	public Camera camera;
 	public Camera newCamera;
-	public GameObject currentObjectPos;
+	private GameObject planet;
 	public GameObject scale;
 	
 	public float speed = 10.0f;
@@ -26,22 +26,24 @@ public class menuLoad : MonoBehaviour {
 		newScale = scale.transform.localScale*2;
 
 		step = speed * Time.deltaTime;
-		xPos = newCamera.transform.position.x;
-		yPos = newCamera.transform.position.y;
+		//xPos = newCamera.transform.position.x;
+		//yPos = newCamera.transform.position.y;
 
 		newPos = new Vector3(xPos, yPos, 0.0f);
+
+		this.planet = GameObject.Find("Menu Planet");
+		print (this.planet.name);
 	}
 
 	public void LoadLevel(int level){
 		Application.LoadLevel (level);
 		if (level == 1) {
-			DontDestroyOnLoad (currentObjectPos);
-
+			DontDestroyOnLoad (planet);
 
 			move = true;
 			print ("go to level 1");
 		} else {
-			Destroy (currentObjectPos);
+			Destroy (planet);
 		}
 	}
 	
