@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class menuLoad : MonoBehaviour {
@@ -6,7 +7,7 @@ public class menuLoad : MonoBehaviour {
 	public Camera camera;
 	public Camera newCamera;
 	private GameObject planet;
-	public GameObject scale;
+	private GameObject scale;
 	
 	public float speed = 10.0f;
 
@@ -37,7 +38,7 @@ public class menuLoad : MonoBehaviour {
 
 	public void LoadLevel(int level){
 		Application.LoadLevel (level);
-		if (level == 1) {
+		if (level == 2) {
 			DontDestroyOnLoad (planet);
 
 			move = true;
