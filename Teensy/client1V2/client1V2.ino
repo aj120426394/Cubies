@@ -133,8 +133,6 @@ void bState2(){
        RED();
     }else if(digitalRead(buttonTHEN) == HIGH && checkYELLOW){
        YELLOW();
-    }else if(digitalRead(buttonENTER) == HIGH && checkGREEN){
-       GREEN();
     }else if(digitalRead(buttonOR) == HIGH && checkPURPLE){
        PURPLE();
     }
@@ -177,7 +175,7 @@ void stateChange(int toState){
       checkNOT = true;
       checkRED = true;
       checkBLUE = true;
-      checkGREEN = true;
+      //checkGREEN = true;
       checkYELLOW = true;
       checkPURPLE = true;
     }
