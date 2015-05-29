@@ -1,0 +1,25 @@
+fileFormatVersion: 2
+guid: f0e482d9a2c294a7797411ad1413895d
+timeCreated: 1432447932
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - loopSprite: {instanceID: 0}
+  - ifSprite: {instanceID: 0}
+  - thenSprite: {instanceID: 0}
+  - enterSprite: {instanceID: 0}
+  - orSprite: {instanceID: 0}
+  - notSprite: {instanceID: 0}
+  - redSprite: {instanceID: 0}
+  - blueSprite: {instanceID: 0}
+  - greenSprite: {instanceID: 0}
+  - yellowSprite: {instanceID: 0}
+  - purpleSprite: {instanceID: 0}
+  - slotPrefab: {fileID: 150032, guid: 718cdbf6c4a9443289df0ff36fedc821, type: 2}
+  - nView: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
