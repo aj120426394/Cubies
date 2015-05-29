@@ -7,6 +7,11 @@ public class NetworkConnection : MonoBehaviour {
 
 	private bool connected = false;
 
+
+	void Start(){
+		ipaddress = Network.player.ipAddress;
+	}
+
 	private void OnConnectedToServer(){
 		connected = true;
 	}
@@ -17,9 +22,7 @@ public class NetworkConnection : MonoBehaviour {
 	private void OnDisconnectedFromServer(){
 		connected = false;
 	}
-	void Start(){
-		ipaddress = Network.player.ipAddress;
-	}
+
 	private void OnGUI(){
 		if (!connected) {
 

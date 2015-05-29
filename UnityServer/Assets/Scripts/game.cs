@@ -87,6 +87,61 @@ public class game : MonoBehaviour {
 			updateSlower = 0;
 		}
 		inputFunctions2 ();
+
+
+
+		if(Input.GetKeyDown("i"))
+		{
+			string temp = "C1:I\n";
+			inputFunctions(temp);
+		}else if(Input.GetKeyDown("t"))
+		{
+			string temp = "C1:T\n";
+			inputFunctions(temp);
+		}
+		else if(Input.GetKeyDown("l"))
+		{
+			string temp = "C1:L\n";
+			inputFunctions(temp);
+		}
+		else if(Input.GetKeyDown("o"))
+		{
+			string temp = "C1:O\n";
+			inputFunctions(temp);
+		}
+		else if(Input.GetKeyDown("n"))
+		{
+			string temp = "C1:N\n";
+			inputFunctions(temp);
+		}
+		else if(Input.GetKeyDown("e"))
+		{
+			string temp = "C1:E\n";
+			inputFunctions(temp);
+		}
+		else if(Input.GetKeyDown("r"))
+		{
+			string temp = "C1:R\n";
+			inputFunctions(temp);
+		}
+		else if(Input.GetKeyDown("g"))
+		{
+			string temp = "C1:G\n";
+			inputFunctions(temp);
+		}
+		else if(Input.GetKeyDown("b"))
+		{
+			string temp = "C1:B\n";
+			inputFunctions(temp);
+		}
+		else if(Input.GetKeyDown("y"))
+		{
+			Debug.Log("yellow");
+			string temp = "C1:Y\n";
+			inputFunctions(temp);
+		}
+
+
 	}
 
 	/* Handles input keys */
