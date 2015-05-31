@@ -13,17 +13,17 @@ public class ScreenFeedback : MonoBehaviour {
 	private float inventoryWidth, inventoryHeight;
 	public int slots;
 	public int rows;
-	public Sprite loopSprite =  Resources.Load <Sprite>("Sprites/loop");
-	public Sprite ifSprite =  Resources.Load <Sprite>("Sprites/if");
-	public Sprite thenSprite =  Resources.Load <Sprite>("Sprites/then");
-	public Sprite enterSprite =  Resources.Load <Sprite>("Sprites/enter");
-	public Sprite orSprite =  Resources.Load <Sprite>("Sprites/or");
-	public Sprite notSprite =  Resources.Load <Sprite>("Sprites/not");
-	public Sprite redSprite =  Resources.Load <Sprite>("Sprites/red");
-	public Sprite blueSprite =  Resources.Load <Sprite>("Sprites/blue");
-	public Sprite greenSprite =  Resources.Load <Sprite>("Sprites/green");
-	public Sprite yellowSprite =  Resources.Load <Sprite>("Sprites/yellow");
-	public Sprite purpleSprite =  Resources.Load <Sprite>("Sprites/purple");
+	public Sprite loopSprite;
+	public Sprite ifSprite;
+	public Sprite thenSprite;
+	public Sprite enterSprite;
+	public Sprite orSprite;
+	public Sprite notSprite;
+	public Sprite redSprite;
+	public Sprite blueSprite;
+	public Sprite greenSprite;
+	public Sprite yellowSprite;
+	public Sprite purpleSprite;
 	public float slotPaddingLeft, slotPaddingTop;
 	public float slotSize;
 	public GameObject slotPrefab;
@@ -34,6 +34,7 @@ public class ScreenFeedback : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
 		IP = Network.player.ipAddress;
 		if (IP == C1) {
 			this.ID = "C1";

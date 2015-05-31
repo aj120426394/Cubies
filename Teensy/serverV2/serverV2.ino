@@ -39,14 +39,16 @@ void loop(){
     //Serial.println("Get data");
     byte data[Mirf.payload];
     Mirf.getData(data);
-    String from = "";
-    String str = "";
+    char* from = "";
+    char* str = "";
     if(data[0] == (byte)0xC1){
       from = "C1";
     }else if(data[0] == (byte)0xC2){
       from = "C2";
     }else if(data[0] == (byte)0xC3){
       from = "C3";
+    }else if(data[0] == (byte)0xC4){
+      from = "C4";
     }
     
     if(data[1] == (byte)0x01){
@@ -72,7 +74,9 @@ void loop(){
     }else if(data[1] == (byte)0x0B){
       str = "E"; //ENTER
     }
-    Serial.println(from + ":" + str);
+    Serial.println((String)from + ":" + (String)str);
+    feedback(from, str);
+    
     //S erial.println(data[1], HEX);
     Serial.flush();
   }
@@ -88,6 +92,8 @@ void loop(){
       client = "clie2";
     }else if(strstr(serialData, "C3") != NULL){
       client = "clie3";
+    }else if(strstr(serialData, "C4") != NULL){
+      client = "clie4";
     }
     
     sendData(client, serialData);
@@ -120,7 +126,48 @@ void loop(){
   }
 }
 
+void feedback(char* from, char* data){
+   byte sendData[1];
+   
+   char* client;
+    if(strstr(from, "C1") != NULL){
+      client = "clie1";
+    }else if(strstr(from, "C2") != NULL){
+      client = "clie2";
+    }else if(strstr(from, "C3") != NULL){
+      client = "clie3";
+    }else if(strstr(from, "C4") != NULL){
+      client = "clie4";
+    }
 
+  if(strstr(data, "I") != NULL){
+    sendData[0] = (byte)0xB1;
+  }else if(strstr(data, "T") != NULL){
+    sendData[0] = (byte)0xB2;
+  }else if(strstr(data, "N") != NULL){
+    sendData[0] = (byte)0xB3;
+  }else if(strstr(data, "O") != NULL){
+    sendData[0] = (byte)0xB5;
+  }else if(strstr(data, "L") != NULL){
+    sendData[0] = (byte)0xB4;
+  }else if(strstr(data, "E") != NULL){
+    sendData[0] = (byte)0xBB;
+  }else if(strstr(data, "R") != NULL){
+    sendData[0] = (byte)0xB6;
+  }else if(strstr(data, "B") != NULL){
+    sendData[0] = (byte)0xB7;
+  }else if(strstr(data, "G") != NULL){
+    sendData[0] = (byte)0xB8;
+  }else if(strstr(data, "Y") != NULL){
+    sendData[0] = (byte)0xB9;
+  }else if(strstr(data, "P") != NULL){
+    sendData[0] = (byte)0x0A;
+  }
+  Mirf.setTADDR((byte *)client);
+  Mirf.send(sendData);
+  while(Mirf.isSending()){
+  }
+}
 void sendData(char* client, char* sendingData){
   byte sendData[1];
 
