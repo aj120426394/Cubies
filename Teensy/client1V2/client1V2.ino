@@ -22,8 +22,8 @@
 #include <Adafruit_NeoPixel.h>
 #include <avr/power.h>
 
-#define LEDPIN         6
-#define NUMPIXELS      2
+#define LEDPIN         2
+#define NUMPIXELS      5
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, LEDPIN, NEO_GRB + NEO_KHZ800);
 
 
@@ -101,7 +101,7 @@ void loop(){
   if(!Mirf.isSending() && Mirf.dataReady()){
     byte data[Mirf.payload];
     Mirf.getData(data);
-    Serial.print("Ping: ");
+    Serial.print("From Server: ");
     Serial.println(data[0],HEX);
     dataGet(data[0]);
   }
@@ -113,15 +113,15 @@ void loop(){
 void bState1(){
   if(inputable){
     if(digitalRead(buttonIF) == HIGH && checkIF){
-      IF();
+      IF(false);
     }else if(digitalRead(buttonTHEN) == HIGH && checkTHEN){
-      THEN();
+      THEN(false);
     }else if(digitalRead(buttonENTER) == HIGH && checkENTER){
-      ENTER();
+      ENTER(false);
     }else if(digitalRead(buttonLOOP) == HIGH && checkLOOP){
-      LOOP();
+      LOOP(false);
     }else if(digitalRead(buttonOR) == HIGH && checkOR){
-      OR();
+      OR(false);
     }
     delay(500);
   }
@@ -130,33 +130,33 @@ void bState1(){
 void bState2(){
   if(inputable){
     if(digitalRead(buttonIF) == HIGH && checkRED){
-       RED();
+       RED(false);
     }else if(digitalRead(buttonTHEN) == HIGH && checkYELLOW){
-       YELLOW();
+       YELLOW(false);
     }else if(digitalRead(buttonENTER) == HIGH && checkGREEN){
-       GREEN();
+       GREEN(false);
     }else if(digitalRead(buttonOR) == HIGH && checkPURPLE){
-       PURPLE();
+       PURPLE(false);
     }
    
     if(!pressLOOP){
       if(gameStart){
         if(digitalRead(buttonNOT) == HIGH && checkBLUE){
-           BLUE();
+           BLUE(false);
        }else if(digitalRead(buttonLOOP) == HIGH && checkLOOP){
-           LOOP();
+           LOOP(false);
        } 
       }else{
         if(digitalRead(buttonNOT) == HIGH && checkNOT){
-           NOT();
+           NOT(false);
         }else if(digitalRead(buttonLOOP) == HIGH && checkBLUE){
-           BLUE();
+           BLUE(false);
         }
       }
        
      }else{
        if(digitalRead(buttonNOT) == HIGH && checkBLUE){
-         BLUE();
+         BLUE(false);
        }
      }
   }
@@ -219,111 +219,146 @@ void buttonChange(int temp){
   }
 }
 
-void IF(){
-  Serial.println("IF");
-  byte str = (byte)0x01; 
-  dataSending(str);
-  stateChange(2);
-}
-
-void THEN(){
-  Serial.println("THEN");
-  byte str = (byte)0x02;
-  dataSending(str);
-  
-  pressTHEN = true;
-  pressOR = false;
-  stateChange(2);
-}
-
-void NOT(){
-  Serial.println("NOT");
-  byte str = (byte)0x03;
-  dataSending(str);
-  checkNOT = false;
-}
-
-void LOOP(){
-  Serial.println("LOOP");
-  byte str = (byte)0x04;
-  dataSending(str);
-  if(!gameStart){
-    pressLOOP = true;
+void IF(bool flag){
+  if(!flag){
+    Serial.println("IF");
+    byte str = (byte)0x01; 
+    dataSending(str);
+  }else{
+    stateChange(2);
   }
-  checkLOOP = false;
+}
+
+void THEN(bool flag){
+  if(!flag){
+    Serial.println("THEN");
+    byte str = (byte)0x02;
+    dataSending(str);
+  }else{
+    pressTHEN = true;
+    pressOR = false;
+    stateChange(2);
+  }
+}
+
+void NOT(bool flag){
+  if(!flag){
+    Serial.println("NOT");
+    byte str = (byte)0x03;
+    dataSending(str);
+  }else{
+    checkNOT = false;
+  } 
+}
+
+void LOOP(bool flag){
+  if(!flag){
+    Serial.println("LOOP");
+    byte str = (byte)0x04;
+    dataSending(str);
+  }else{
+    if(!gameStart){
+      pressLOOP = true;
+    }
+    checkLOOP = false;
+  }
+  
+  
   
   // LED twinkle 
 }
-void OR(){
-  Serial.println("OR");
-  byte str = (byte)0x05;  
-  dataSending(str);
-  pressOR = true;
-  stateChange(2);
-}
-void RED(){
-  Serial.println("RED");
-  byte str = (byte)0x06;  
-  dataSending(str);
-  if(!gameStart){
-    stateChange(3);
+void OR(bool flag){
+  if(!flag){
+    Serial.println("OR");
+    byte str = (byte)0x05;  
+    dataSending(str);
   }else{
-    checkReset();
+    pressOR = true;
+    stateChange(2);
   }
 }
-void BLUE(){
-  Serial.println("BLUE");
-  byte str = (byte)0x07;  
-  dataSending(str);
-  if(!gameStart){
-    stateChange(3);
+void RED(bool flag){
+  if(!flag){
+    Serial.println("RED");
+    byte str = (byte)0x06;  
+    dataSending(str);
   }else{
-    checkReset();
+    if(!gameStart){
+      stateChange(3);
+    }else{
+      checkReset();
+    }
   }
 }
-void GREEN(){
-  Serial.println("GREEN");
-  byte str = (byte)0x08;  
-  dataSending(str);
-  if(!gameStart){
-    stateChange(3);
+void BLUE(bool flag){
+  if(!flag){
+    Serial.println("BLUE");
+    byte str = (byte)0x07;  
+    dataSending(str);
   }else{
-    checkReset();
+    if(!gameStart){
+      stateChange(3);
+    }else{
+      checkReset();
+    }
   }
 }
-void YELLOW(){
-  Serial.println("YELLOW");
-  byte str = (byte)0x09;  
-  dataSending(str);
-  if(!gameStart){
-    stateChange(3);
+void GREEN(bool flag){
+  if(!flag){
+    Serial.println("GREEN");
+    byte str = (byte)0x08;  
+    dataSending(str);
   }else{
-    checkReset();
+    if(!gameStart){
+      stateChange(3);
+    }else{
+      checkReset();
+    }
   }
 }
-void PURPLE(){
-  Serial.println("PURPLE");
-  byte str = (byte)0x0A;  
-  dataSending(str);
-  if(!gameStart){
-    stateChange(3);
+void YELLOW(bool flag){
+  if(!flag){
+    Serial.println("YELLOW");
+    byte str = (byte)0x09;  
+    dataSending(str);
   }else{
-    checkReset();
+    if(!gameStart){
+      stateChange(3);
+    }else{
+      checkReset();
+    }
   }
 }
-void ENTER(){
-  Serial.println("ENTER");
-  byte str = (byte)0x0B;  
-  dataSending(str);
-  stateChange(1);
-  checkENTER = false;
-  pressTHEN = false;
-  pressOR = false;
-  if(pressLOOP){
-    //stop twinkle
-    pressLOOP = false;
+void PURPLE(bool flag){
+  if(!flag){
+    Serial.println("PURPLE");
+    byte str = (byte)0x0A;  
+    dataSending(str);
+  }else{
+    if(!gameStart){
+      stateChange(3);
+    }else{
+      checkReset();
+    }
   }
 }
+void ENTER(bool flag){
+  if(!flag){
+    Serial.println("ENTER");
+    byte str = (byte)0x0B;  
+    dataSending(str);
+  }else{
+    stateChange(1);
+    checkENTER = false;
+    pressTHEN = false;
+    pressOR = false;
+    if(pressLOOP){
+      //stop twinkle
+      pressLOOP = false;
+    }
+  }
+}
+
 // data sending through radio
 void dataSending(byte str){
   byte data[2] = {CLIENTNAME, str};
@@ -333,6 +368,7 @@ void dataSending(byte str){
   }
   Serial.println("Data Sent");
 }
+
 void dataGet(byte str){
   if(str == (byte)0xFF){
     //game start
@@ -399,6 +435,30 @@ void dataGet(byte str){
     checkLOOP = true;
     Serial.println("LED:LOOP");
   }
+  
+  if(str == (byte)0xB1){
+    IF(true);//I
+  }else if(str == (byte)0xB2){
+    THEN(true);//T
+  }else if(str == (byte)0xB3){
+    NOT(true);//N
+  }else if(str == (byte)0xB4){
+    LOOP(true);//L
+  }else if(str == (byte)0xB5){
+    OR(true);//O
+  }else if(str == (byte)0xB6){
+    RED(true);//R
+  }else if(str == (byte)0xB7){
+    BLUE(true);//B
+  }else if(str == (byte)0xB8){
+    GREEN(true);//G
+  }else if(str == (byte)0xB9){
+    YELLOW(true);//Y
+  }else if(str == (byte)0xBA){
+    PURPLE(true);//P
+  }else if(str == (byte)0xBB){
+    ENTER(true);//E
+  }
 }
 
 void checkReset(){
@@ -415,46 +475,84 @@ void checkReset(){
   checkYELLOW = false;
   checkPURPLE = false;
 }
+
 void LEDcontroller(){
   if(checkIF){
     pixels.setPixelColor(0, pixels.Color(255,255,255));
+  }else{
+    pixels.setPixelColor(0, pixels.Color(0,0,0));
   }
+  
   if(checkOR){
-    pixels.setPixelColor(1, pixels.Color(255,255,255));
-  }
-  if(checkTHEN){
-    pixels.setPixelColor(2, pixels.Color(255,255,255));
-  }
-  if(checkENTER){
     pixels.setPixelColor(3, pixels.Color(255,255,255));
+    
+  }else{
+    pixels.setPixelColor(3, pixels.Color(0,0,0));
   }
-  if(checkNOT){
+  
+  if(checkTHEN){
     pixels.setPixelColor(4, pixels.Color(255,255,255));
+  }else{
+    pixels.setPixelColor(4, pixels.Color(0,0,0));
   }
+  
+  if(checkENTER){
+    pixels.setPixelColor(2, pixels.Color(255,255,255));
+  }else{
+    pixels.setPixelColor(2, pixels.Color(0,0,0));
+  }
+  
+  if(checkNOT){
+    pixels.setPixelColor(1, pixels.Color(255,255,255));
+  }else{
+    pixels.setPixelColor(1, pixels.Color(0,0,0));
+  }
+  
   if(checkLOOP){
     pixels.setPixelColor(5, pixels.Color(255,255,255));
+  }else{
+    pixels.setPixelColor(5, pixels.Color(0,0,0));
   }
+  
   
   if(checkRED){
     pixels.setPixelColor(0, pixels.Color(255,0,0));
+  }else{
+    pixels.setPixelColor(0, pixels.Color(0,0,0));
   }
-  if(checkBLUE){
-    pixels.setPixelColor(1, pixels.Color(0,255,0));
-  }
-  if(checkGREEN){
-    pixels.setPixelColor(2, pixels.Color(0,0,255));
-  }
-  if(checkYELLOW){
-    pixels.setPixelColor(3, pixels.Color(255,255,0));
-  }
+  
   if(checkPURPLE){
-    if(checkLOOP){
-      pixels.setPixelColor(4, pixels.Color(255,0,255));
-    }else if(checkNOT){
-      pixels.setPixelColor(5, pixels.Color(255,0,255));
-    }
-    
+    pixels.setPixelColor(1, pixels.Color(0,255,0));
+  }else{
+    pixels.setPixelColor(1, pixels.Color(0,0,0));
   }
+  
+  if(checkGREEN){
+    pixels.setPixelColor(2, pixels.Color(0,255,0));
+  }else{
+    pixels.setPixelColor(2, pixels.Color(0,0,0));
+  }
+  
+  if(checkYELLOW){
+    pixels.setPixelColor(4, pixels.Color(255,255,0));
+  }else{
+    pixels.setPixelColor(4, pixels.Color(0,0,0));
+  }
+  
+  if(checkBLUE){
+    if(checkLOOP){
+      pixels.setPixelColor(5, pixels.Color(255,0,255));
+    }else if(checkNOT){
+      pixels.setPixelColor(3, pixels.Color(255,0,255));
+    }
+  }else{
+    if(checkLOOP){
+      pixels.setPixelColor(5, pixels.Color(0,0,0));
+    }else if(checkNOT){
+      pixels.setPixelColor(3, pixels.Color(0,0,0));
+    }
+  }
+  
   pixels.show();
 }
 
