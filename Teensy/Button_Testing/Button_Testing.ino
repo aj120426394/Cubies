@@ -23,7 +23,8 @@
  
  http://www.arduino.cc/en/Tutorial/Button
  */
-
+#include <Bounce2.h>
+Bounce debouncer = Bounce(); 
 // constants won't change. They're used here to 
 // set pin numbers:
 const int buttonPin = 23;     // the number of the pushbutton pin
@@ -32,6 +33,8 @@ const int buttonPin3 = 21;
 const int buttonPin4 = 20;
 const int buttonPin5 = 19;
 const int buttonPin6 = 18;
+
+
 
 const int ledPin =  13;      // the number of the LED pin
   // Pin 13: Arduino has an LED connected on pin 13
@@ -47,6 +50,7 @@ int buttonState4 = 0;
 int buttonState5 = 0;
 int buttonState6 = 0;
 
+unsigned long buttonPressTimeStamp;
 
 void setup() {
   // initialize the LED pin as an output:
@@ -68,22 +72,28 @@ void loop(){
   buttonState4 = digitalRead(buttonPin4);
   buttonState5 = digitalRead(buttonPin5);
   buttonState6 = digitalRead(buttonPin6);
-  
+
 
   // check if the pushbutton is pressed.
   // if it is, the buttonState is HIGH:
-  if(buttonState == HIGH){
+  if(buttonState == HIGH && millis() - buttonPressTimeStamp >= 500){
     Serial.println("1");
-  }else if(buttonState2 == HIGH){
+    buttonPressTimeStamp = millis();
+  }else if(buttonState2 == HIGH && millis() - buttonPressTimeStamp >= 500){
     Serial.println("2");
-  }else if(buttonState3 == HIGH){
+    buttonPressTimeStamp = millis();
+  }else if(buttonState3 == HIGH && millis() - buttonPressTimeStamp >= 500){
     Serial.println("3");
-  }else if(buttonState4 == HIGH){
+    buttonPressTimeStamp = millis();
+  }else if(buttonState4 == HIGH && millis() - buttonPressTimeStamp >= 500){
     Serial.println("4");
-  }else if(buttonState5 == HIGH){
+    buttonPressTimeStamp = millis();
+  }else if(buttonState5 == HIGH && millis() - buttonPressTimeStamp >= 500){
     Serial.println("5");
-  }else if(buttonState6 == HIGH){
+    buttonPressTimeStamp = millis();
+  }else if(buttonState6 == HIGH && millis() - buttonPressTimeStamp >= 500){
     Serial.println("6");
+    buttonPressTimeStamp = millis();
   }
   
   if (buttonState == HIGH) {     
