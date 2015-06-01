@@ -149,7 +149,7 @@ public class game : MonoBehaviour {
 		//writing a function
 		string[] spilt = data.Split(':');
 		string from = spilt[0];
-		string command = spilt[1].Remove(1);
+		string command = spilt[1];
 
 		int i = int.Parse(from.Substring(1))-1;
 		character client = this.characters[from];

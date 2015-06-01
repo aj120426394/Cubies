@@ -30,12 +30,12 @@ Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, LEDPIN, NEO_GRB + NEO_KH
 const byte CLIENTNAME = (byte)0xC1;
 
 //Define command button pin
-const int buttonIF = 23;
-const int buttonTHEN = 22;
-const int buttonENTER = 21;
-const int buttonNOT = 20;
-const int buttonLOOP = 19;
-const int buttonOR = 18;
+const int buttonIF = 18;
+const int buttonTHEN = 19;
+const int buttonENTER = 20;
+const int buttonNOT = 21;
+const int buttonLOOP = 22;
+const int buttonOR = 23;
 
 // check the command is available to press
 boolean checkIF = true;
@@ -160,6 +160,7 @@ void bState2(){
        }
      }
   }
+  delay(500);
 }
 
 void stateChange(int toState){

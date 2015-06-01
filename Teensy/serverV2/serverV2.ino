@@ -161,7 +161,7 @@ void feedback(char* from, char* data){
   }else if(strstr(data, "Y") != NULL){
     sendData[0] = (byte)0xB9;
   }else if(strstr(data, "P") != NULL){
-    sendData[0] = (byte)0x0A;
+    sendData[0] = (byte)0xBA;
   }
   Mirf.setTADDR((byte *)client);
   Mirf.send(sendData);
