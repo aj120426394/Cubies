@@ -66,6 +66,8 @@ boolean pressLOOP = false;
 
 int currentState = 1;
 
+unsigned long buttonPressTimeStamp;
+
 void setup(){
   pinMode(buttonIF, INPUT);
   pinMode(buttonTHEN, INPUT);
@@ -105,13 +107,12 @@ void loop(){
     Serial.println(data[0],HEX);
     dataGet(data[0]);
   }
-  
   LEDcontroller();
-  delay(100);
 } 
 //initial setting of the button
 void bState1(){
-  if(inputable){
+  if(inputable && millis() - buttonPressTimeStamp >= 500){
+    buttonPressTimeStamp = millis();
     if(digitalRead(buttonIF) == HIGH && checkIF){
       IF(false);
     }else if(digitalRead(buttonTHEN) == HIGH && checkTHEN){
@@ -128,7 +129,8 @@ void bState1(){
 }
 // color up, NOT up
 void bState2(){
-  if(inputable){
+  if(inputable && millis() - buttonPressTimeStamp >= 500){
+    buttonPressTimeStamp = millis();
     if(digitalRead(buttonIF) == HIGH && checkRED){
        RED(false);
     }else if(digitalRead(buttonTHEN) == HIGH && checkYELLOW){
@@ -160,7 +162,6 @@ void bState2(){
        }
      }
   }
-  delay(500);
 }
 
 void stateChange(int toState){
