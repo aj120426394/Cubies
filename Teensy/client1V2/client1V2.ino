@@ -134,19 +134,17 @@ void bState1(){
 void bState2(){
   if(inputable && millis() - buttonPressTimeStamp >= 500){
     buttonPressTimeStamp = millis();
-    if(digitalRead(buttonIF) == HIGH && checkRED){
+    if(digitalRead(buttonIF) == HIGH && checkBLUE){
+       BLUE(false);
+    }else if(digitalRead(buttonTHEN) == HIGH && checkRED){
        RED(false);
-    }else if(digitalRead(buttonTHEN) == HIGH && checkYELLOW){
-       YELLOW(false);
-    }else if(digitalRead(buttonENTER) == HIGH && checkGREEN){
-       GREEN(false);
-    }else if(digitalRead(buttonOR) == HIGH && checkPURPLE){
-       PURPLE(false);
+    }else if(digitalRead(buttonOR) == HIGH && checkYELLOW){
+       checkYELLOW(false);
     }
    
     if(!pressLOOP){
       if(gameStart){
-        if(digitalRead(buttonNOT) == HIGH && checkBLUE){
+        if(digitalRead(buttonNOT) == HIGH && checkGREEN){
            BLUE(false);
        }else if(digitalRead(buttonLOOP) == HIGH && checkLOOP){
            LOOP(false);
@@ -154,7 +152,7 @@ void bState2(){
       }else{
         if(digitalRead(buttonNOT) == HIGH && checkNOT){
            NOT(false);
-        }else if(digitalRead(buttonLOOP) == HIGH && checkBLUE){
+        }else if(digitalRead(buttonLOOP) == HIGH && checkGREEN){
            BLUE(false);
         }
       }
