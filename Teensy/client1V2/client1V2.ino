@@ -94,12 +94,14 @@ void setup(){
   Mirf.setRADDR((byte *)"clie1");
   Mirf.payload = 32;
   Mirf.config();
-
+  checkIF = true;
   Serial.println("Beginning ... ");
   
 }
 
 void loop(){
+  LEDcontroller();
+  /*
   if(!Mirf.isSending() && Mirf.dataReady()){
     byte data[Mirf.payload];
     Mirf.getData(data);
@@ -107,7 +109,9 @@ void loop(){
     Serial.println(data[0],HEX);
     dataGet(data[0]);
   }
-  LEDcontroller();
+  */
+  //pixels.setPixelColor(5, pixels.Color(0,255,0));
+  //pixels.show();
 } 
 //initial setting of the button
 void bState1(){
@@ -124,7 +128,6 @@ void bState1(){
     }else if(digitalRead(buttonOR) == HIGH && checkOR){
       OR(false);
     }
-    delay(500);
   }
 }
 // color up, NOT up
@@ -205,7 +208,6 @@ void stateChange(int toState){
 }
 
 void buttonChange(int temp){
-  delay(500);
   if(temp == 1){
     attachInterrupt(buttonIF, bState1, HIGH);
     attachInterrupt(buttonTHEN, bState1, HIGH);
@@ -479,82 +481,63 @@ void checkReset(){
 }
 
 void LEDcontroller(){
-  if(checkIF){
-    pixels.setPixelColor(0, pixels.Color(255,255,255));
+  if(checkIF || checkOR){
+    if(checkIF){
+      pixels.setPixelColor(0, pixels.Color(255,255,255));
+    }else{
+      pixels.setPixelColor(0, pixels.Color(0,0,255));
+    }
   }else{
     pixels.setPixelColor(0, pixels.Color(0,0,0));
   }
   
-  if(checkOR){
-    pixels.setPixelColor(3, pixels.Color(255,255,255));
-    
+  if(checkOR || checkYELLOW){
+    if(checkOR){
+      pixels.setPixelColor(3, pixels.Color(255,255,255));
+    }else{
+      pixels.setPixelColor(3, pixels.Color(255,255,0));
+    }
   }else{
     pixels.setPixelColor(3, pixels.Color(0,0,0));
   }
   
-  if(checkTHEN){
-    pixels.setPixelColor(4, pixels.Color(255,255,255));
+  if(checkTHEN || checkRED){
+    if(checkTHEN){
+      pixels.setPixelColor(4, pixels.Color(255,255,255));
+    }else{
+      pixels.setPixelColor(4, pixels.Color(255,0,0));
+    }
   }else{
     pixels.setPixelColor(4, pixels.Color(0,0,0));
   }
   
+  /*
   if(checkENTER){
     pixels.setPixelColor(2, pixels.Color(255,255,255));
   }else{
     pixels.setPixelColor(2, pixels.Color(0,0,0));
   }
+  */
   
-  if(checkNOT){
-    pixels.setPixelColor(1, pixels.Color(255,255,255));
+  if(checkNOT || checkGREEN){
+    if(checkNOT){
+      pixels.setPixelColor(1, pixels.Color(255,255,255));
+    }else{
+      pixels.setPixelColor(1, pixels.Color(0,255,0));
+    }
   }else{
     pixels.setPixelColor(1, pixels.Color(0,0,0));
   }
   
-  if(checkLOOP){
-    pixels.setPixelColor(5, pixels.Color(255,255,255));
-  }else{
-    pixels.setPixelColor(5, pixels.Color(0,0,0));
-  }
-  
-  
-  if(checkRED){
-    pixels.setPixelColor(0, pixels.Color(255,0,0));
-  }else{
-    pixels.setPixelColor(0, pixels.Color(0,0,0));
-  }
-  
-  if(checkPURPLE){
-    pixels.setPixelColor(1, pixels.Color(0,255,0));
-  }else{
-    pixels.setPixelColor(1, pixels.Color(0,0,0));
-  }
-  
-  if(checkGREEN){
-    pixels.setPixelColor(2, pixels.Color(0,255,0));
+  if(checkLOOP || checkGREEN){
+    if(checkLOOP){
+      pixels.setPixelColor(2, pixels.Color(255,255,255));
+    }else{
+      pixels.setPixelColor(2, pixels.Color(0,255,0));
+    }
   }else{
     pixels.setPixelColor(2, pixels.Color(0,0,0));
   }
-  
-  if(checkYELLOW){
-    pixels.setPixelColor(4, pixels.Color(255,255,0));
-  }else{
-    pixels.setPixelColor(4, pixels.Color(0,0,0));
-  }
-  
-  if(checkBLUE){
-    if(checkLOOP){
-      pixels.setPixelColor(5, pixels.Color(255,0,255));
-    }else if(checkNOT){
-      pixels.setPixelColor(3, pixels.Color(255,0,255));
-    }
-  }else{
-    if(checkLOOP){
-      pixels.setPixelColor(5, pixels.Color(0,0,0));
-    }else if(checkNOT){
-      pixels.setPixelColor(3, pixels.Color(0,0,0));
-    }
-  }
-  
   pixels.show();
 }
 
