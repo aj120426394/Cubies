@@ -27,13 +27,19 @@
 Bounce debouncer = Bounce(); 
 // constants won't change. They're used here to 
 // set pin numbers:
-const int buttonPin = 23;     // the number of the pushbutton pin
-const int buttonPin2 = 22;
+const int buttonPin = 22;     // the number of the pushbutton pin
+const int buttonPin2 = 20;
 const int buttonPin3 = 21;
-const int buttonPin4 = 20;
+const int buttonPin4 = 23;
 const int buttonPin5 = 19;
 const int buttonPin6 = 18;
 
+const int buttonIF = 18;
+const int buttonTHEN = 19;
+const int buttonENTER = 23;
+const int buttonNOT = 21;
+const int buttonLOOP = 22;
+const int buttonOR = 20;
 
 
 const int ledPin =  13;      // the number of the LED pin
@@ -66,33 +72,33 @@ void setup() {
 
 void loop(){
   // read the state of the pushbutton value:
-  buttonState = digitalRead(buttonPin);
-  buttonState2 = digitalRead(buttonPin2);
-  buttonState3 = digitalRead(buttonPin3);
-  buttonState4 = digitalRead(buttonPin4);
-  buttonState5 = digitalRead(buttonPin5);
-  buttonState6 = digitalRead(buttonPin6);
+  buttonState = digitalRead(buttonIF);
+  buttonState2 = digitalRead(buttonTHEN);
+  buttonState3 = digitalRead(buttonENTER);
+  buttonState4 = digitalRead(buttonNOT);
+  buttonState5 = digitalRead(buttonLOOP);
+  buttonState6 = digitalRead(buttonOR);
 
 
   // check if the pushbutton is pressed.
   // if it is, the buttonState is HIGH:
   if(buttonState == HIGH && millis() - buttonPressTimeStamp >= 500){
-    Serial.println("OR");
+    Serial.println("IF");
     buttonPressTimeStamp = millis();
   }else if(buttonState2 == HIGH && millis() - buttonPressTimeStamp >= 500){
-    Serial.println("LOOP");
-    buttonPressTimeStamp = millis();
-  }else if(buttonState3 == HIGH && millis() - buttonPressTimeStamp >= 500){
-    Serial.println("NOT");
-    buttonPressTimeStamp = millis();
-  }else if(buttonState4 == HIGH && millis() - buttonPressTimeStamp >= 500){
-    Serial.println("ENTER");
-    buttonPressTimeStamp = millis();
-  }else if(buttonState5 == HIGH && millis() - buttonPressTimeStamp >= 500){
     Serial.println("THEN");
     buttonPressTimeStamp = millis();
+  }else if(buttonState3 == HIGH && millis() - buttonPressTimeStamp >= 500){
+    Serial.println("ENTER");
+    buttonPressTimeStamp = millis();
+  }else if(buttonState4 == HIGH && millis() - buttonPressTimeStamp >= 500){
+    Serial.println("NOT");
+    buttonPressTimeStamp = millis();
+  }else if(buttonState5 == HIGH && millis() - buttonPressTimeStamp >= 500){
+    Serial.println("LOOP");
+    buttonPressTimeStamp = millis();
   }else if(buttonState6 == HIGH && millis() - buttonPressTimeStamp >= 500){
-    Serial.println("IF");
+    Serial.println("OR");
     buttonPressTimeStamp = millis();
   }
   

@@ -140,7 +140,7 @@ void bState2(){
     }else if(digitalRead(buttonTHEN) == HIGH && checkRED){
        RED(false);
     }else if(digitalRead(buttonOR) == HIGH && checkYELLOW){
-       YELLOW(false)
+       YELLOW(false);
     }
    
     if(!pressLOOP){

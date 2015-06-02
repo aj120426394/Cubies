@@ -5,8 +5,10 @@ using System.Linq;
 
 public class character : MonoBehaviour {
 
-	public obstacle startObstacle;
+	public obstacle start;
+	public obstacle firstObstacle;
 	public obstacle finishObstacle;
+	public obstacle goal;
 	private obstacle moveToObstacle;
 	private obstacle targetObatacle;
 
@@ -35,8 +37,8 @@ public class character : MonoBehaviour {
 		this.sameColorList = new List<obstacle> ();
 		this.loopPath = new List<obstacle> ();
 		this.moveableObs = new Dictionary<string, obstacle> ();
-		this.moveToObstacle = startObstacle;
-		this.targetObatacle = startObstacle;
+		this.moveToObstacle = firstObstacle;
+		this.targetObatacle = firstObstacle;
 
 		lr = gameObject.AddComponent<LineRenderer>();
 		lr.SetWidth ((float)0.05, (float)0.05);
@@ -44,9 +46,9 @@ public class character : MonoBehaviour {
 		lr.SetColors (Color.black, Color.white);
 		lr.SetVertexCount (2);
 
-		drawline (startObstacle.transform.position);
+		drawline (firstObstacle.transform.position);
 
-		this.transform.LookAt (startObstacle.transform.position - new Vector3 (0f, 0f, axisZ));
+		this.transform.LookAt (firstObstacle.transform.position - new Vector3 (0f, 0f, axisZ));
 		if(transform.position.x > moveToObstacle.transform.position.x){
 			this.transform.Rotate (transform.rotation.x, transform.rotation.y, 180);
 		}
@@ -134,9 +136,25 @@ public class character : MonoBehaviour {
 	void OnTriggerEnter(Collider coll){
 
 		if (!coll.name.StartsWith ("C")) {
+			print ("hit the ship");
 			if(coll.name == this.targetObatacle.getName()){
 				if (coll.gameObject.name == this.finishObstacle.getName()){
 					this.inputAble = false;
+
+					float xPos = goal.transform.position.x;
+					float yPos = goal.transform.position.y;
+					Vector3 newPos = new Vector3 (xPos, yPos, -1.7f);
+					
+					float step = this.speed * Time.deltaTime;
+
+					transform.position = Vector3.MoveTowards (transform.position, newPos, step);
+					transform.LookAt(this.goal.transform.position - new Vector3(0f,0f,axisZ));
+					if(transform.position.x > goal.transform.position.x){
+						this.transform.Rotate (transform.rotation.x, transform.rotation.y, 180);
+					}
+
+					print ("Ready to finish");
+				}else if(coll.gameObject.name == this.goal.getName()){
 					send("GameFin");
 				}else{
 					this.loopPath.Clear();
@@ -209,13 +227,11 @@ public class character : MonoBehaviour {
 			result += ch;
 		}
 
-
-		print (result);
 		foreach (obstacle o in connObs) {
-			print ("oname:" + o.getName());
+			//print ("oname:" + o.getName());
 			if(result.Contains(o.getTag())){
 				if(moveableObs.ContainsKey(o.getTag())){
-					print ("test" + o.getTag());
+					//print ("test" + o.getTag());
 					print (this.sameColor);
 					this.sameColorList.Add(o);
 					this.sameColor = true;

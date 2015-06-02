@@ -7,8 +7,10 @@ using System.Collections.Generic;
 
 public class game : MonoBehaviour {
 	public float speed = 0.5f;
-	public obstacle startPlanet;
+	public obstacle start;
+	public obstacle firstPlanet;
 	public obstacle finishPlanet;
+	public obstacle goal;
 	public GameObject Rship;
 	public GameObject Gship;
 	public GameObject Bship;
@@ -31,8 +33,10 @@ public class game : MonoBehaviour {
 		 * Testing playerpref
 		 */
 
-		PlayerPrefs.SetInt ("clientNum", 1);
+		PlayerPrefs.SetInt ("clientNum", 3);
 		PlayerPrefs.SetString ("C1", "G");
+		PlayerPrefs.SetString ("C3", "R");
+
 
 		print ("GAME RULES: I = if T = then  B = blue  R = Red G = green  Y = yellow");
 
@@ -48,7 +52,6 @@ public class game : MonoBehaviour {
 			string charName = "C" + (i+1);
 			string shipColor = PlayerPrefs.GetString(charName);
 			print(shipColor);
-			string prefabAddr = "Assets/Prefab/"+shipColor + "_ship.prefab";
 			GameObject shipPrefab = null;
 			//Object shipPrefab = AssetDatabase.LoadAssetAtPath (prefabAddr, typeof(GameObject));
 
@@ -61,12 +64,14 @@ public class game : MonoBehaviour {
 			}else if(shipColor == "Y"){
 				shipPrefab = Yship;
 			}
-			GameObject shipObject = (GameObject)Instantiate (shipPrefab, new Vector3 (-17.4f, 5.6f, -1.7f), Quaternion.identity);
+			GameObject shipObject = (GameObject)Instantiate (shipPrefab, new Vector3 (start.transform.position.x, start.transform.position.y, -1.7f), Quaternion.identity);
 
 			character ship = shipObject.GetComponent<character>();
 
-			ship.startObstacle = startPlanet;
+			ship.start = start;
+			ship.firstObstacle = firstPlanet;
 			ship.finishObstacle = finishPlanet;
+			ship.goal = goal;
 			ship.name = charName;
 			this.characters.Add(charName, ship);
 		}

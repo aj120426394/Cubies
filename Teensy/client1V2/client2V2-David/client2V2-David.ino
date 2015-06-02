@@ -23,19 +23,19 @@
 #include <avr/power.h>
 
 #define LEDPIN         2
-#define NUMPIXELS      5
+#define NUMPIXELS      6
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, LEDPIN, NEO_GRB + NEO_KHZ800);
 
 
-const byte CLIENTNAME = (byte)0xC1;
+const byte CLIENTNAME = (byte)0xC2;
 
 //Define command button pin
 const int buttonIF = 18;
 const int buttonTHEN = 19;
-const int buttonENTER = 20;
+const int buttonENTER = 23;
 const int buttonNOT = 21;
 const int buttonLOOP = 22;
-const int buttonOR = 23;
+const int buttonOR = 20;
 
 // check the command is available to press
 boolean checkIF = true;
@@ -91,7 +91,7 @@ void setup(){
   
   Mirf.spi = &MirfHardwareSpi;
   Mirf.init();
-  Mirf.setRADDR((byte *)"clie1");
+  Mirf.setRADDR((byte *)"clie2");
   Mirf.payload = 32;
   Mirf.config();
   checkIF = true;
@@ -145,7 +145,7 @@ void bState2(){
     if(!pressLOOP){
       if(gameStart){
         if(digitalRead(buttonNOT) == HIGH && checkGREEN){
-           BLUE(false);
+           GREEN(false);
        }else if(digitalRead(buttonLOOP) == HIGH && checkLOOP){
            LOOP(false);
        } 
@@ -153,7 +153,7 @@ void bState2(){
         if(digitalRead(buttonNOT) == HIGH && checkNOT){
            NOT(false);
         }else if(digitalRead(buttonLOOP) == HIGH && checkGREEN){
-           BLUE(false);
+           GREEN(false);
         }
       }
        
@@ -193,9 +193,12 @@ void stateChange(int toState){
       }else{
         checkENTER = true;
       }
+      checkOR = true;
+      /*
       if(!pressOR){
         checkOR = true;
       }
+      */
     }else{
       checkTHEN = true;
       if(pressTHEN){
@@ -481,32 +484,32 @@ void checkReset(){
 void LEDcontroller(){
   if(checkIF || checkBLUE){
     if(checkIF){
-      pixels.setPixelColor(0, pixels.Color(255,255,255));
-    }else{
-      pixels.setPixelColor(0, pixels.Color(0,0,255));
-    }
-  }else{
-    pixels.setPixelColor(0, pixels.Color(0,0,0));
-  }
-  
-  if(checkOR || checkYELLOW){
-    if(checkOR){
       pixels.setPixelColor(3, pixels.Color(255,255,255));
     }else{
-      pixels.setPixelColor(3, pixels.Color(255,255,0));
+      pixels.setPixelColor(3, pixels.Color(0,0,255));
     }
   }else{
     pixels.setPixelColor(3, pixels.Color(0,0,0));
   }
   
-  if(checkTHEN || checkRED){
-    if(checkTHEN){
-      pixels.setPixelColor(2, pixels.Color(255,255,255));
+  if(checkOR || checkYELLOW){
+    if(checkOR){
+      pixels.setPixelColor(1, pixels.Color(255,255,255));
     }else{
-      pixels.setPixelColor(2, pixels.Color(255,0,0));
+      pixels.setPixelColor(1, pixels.Color(255,255,0));
     }
   }else{
-    pixels.setPixelColor(2, pixels.Color(0,0,0));
+    pixels.setPixelColor(1, pixels.Color(0,0,0));
+  }
+  
+  if(checkTHEN || checkRED){
+    if(checkTHEN){
+      pixels.setPixelColor(5, pixels.Color(255,255,255));
+    }else{
+      pixels.setPixelColor(5, pixels.Color(255,0,0));
+    }
+  }else{
+    pixels.setPixelColor(5, pixels.Color(0,0,0));
   }
   
   /*
@@ -519,22 +522,22 @@ void LEDcontroller(){
   
   if(checkNOT || checkGREEN){
     if(checkNOT){
-      pixels.setPixelColor(1, pixels.Color(255,255,255));
-    }else{
-      pixels.setPixelColor(1, pixels.Color(0,255,0));
-    }
-  }else{
-    pixels.setPixelColor(1, pixels.Color(0,0,0));
-  }
-  
-  if(checkLOOP || checkGREEN){
-    if(checkLOOP){
       pixels.setPixelColor(2, pixels.Color(255,255,255));
     }else{
       pixels.setPixelColor(2, pixels.Color(0,255,0));
     }
   }else{
     pixels.setPixelColor(2, pixels.Color(0,0,0));
+  }
+  
+  if(checkLOOP || checkGREEN && !gameStart){
+    if(checkLOOP){
+      pixels.setPixelColor(4, pixels.Color(255,255,255));
+    }else{
+      pixels.setPixelColor(4, pixels.Color(0,255,0));
+    }
+  }else{
+    pixels.setPixelColor(4, pixels.Color(0,0,0));
   }
   pixels.show();
 }
