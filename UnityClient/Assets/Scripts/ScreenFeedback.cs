@@ -34,7 +34,10 @@ public class ScreenFeedback : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 25519f7c46e457e37f9a29f859f5aabf77d83a00
 		IP = Network.player.ipAddress;
 		if (IP == C1) {
 			this.ID = "C1";
