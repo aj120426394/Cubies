@@ -91,7 +91,7 @@ void setup(){
   
   Mirf.spi = &MirfHardwareSpi;
   Mirf.init();
-  Mirf.setRADDR((byte *)"clie2");
+  Mirf.setRADDR((byte *)"clie1");
   Mirf.payload = 32;
   Mirf.config();
   checkIF = true;
@@ -105,9 +105,11 @@ void loop(){
   if(!Mirf.isSending() && Mirf.dataReady()){
     byte data[Mirf.payload];
     Mirf.getData(data);
-    Serial.print("From Server: ");
-    Serial.println(data[0],HEX);
-    dataGet(data[0]);
+   if(data[0] == CLIENTNAME){
+      Serial.print("From Server: ");
+      Serial.println(data[1],HEX);
+      dataGet(data[1]);
+    }
   }
   
   //pixels.setPixelColor(5, pixels.Color(0,255,0));
@@ -158,8 +160,8 @@ void bState2(){
       }
        
      }else{
-       if(digitalRead(buttonNOT) == HIGH && checkBLUE){
-         BLUE(false);
+       if(digitalRead(buttonNOT) == HIGH && checkGREEN){
+         GREEN(false);
        }
      }
   }
@@ -177,7 +179,12 @@ void stateChange(int toState){
     // COLOR / NOT
     buttonChange(2);
     if(!gameStart){
-      checkNOT = true;
+      if(pressLOOP){
+        checkNOT = false;
+      }else{
+        checkNOT = true;
+      }
+
       checkRED = true;
       checkBLUE = true;
       checkGREEN = true;

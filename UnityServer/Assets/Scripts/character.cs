@@ -140,19 +140,8 @@ public class character : MonoBehaviour {
 			if(coll.name == this.targetObatacle.getName()){
 				if (coll.gameObject.name == this.finishObstacle.getName()){
 					this.inputAble = false;
-
-					float xPos = goal.transform.position.x;
-					float yPos = goal.transform.position.y;
-					Vector3 newPos = new Vector3 (xPos, yPos, -1.7f);
-					
-					float step = this.speed * Time.deltaTime;
-
-					transform.position = Vector3.MoveTowards (transform.position, newPos, step);
-					transform.LookAt(this.goal.transform.position - new Vector3(0f,0f,axisZ));
-					if(transform.position.x > goal.transform.position.x){
-						this.transform.Rotate (transform.rotation.x, transform.rotation.y, 180);
-					}
-
+					this.moveToObstacle = goal;
+					this.moveObject = true;
 					print ("Ready to finish");
 				}else if(coll.gameObject.name == this.goal.getName()){
 					send("GameFin");

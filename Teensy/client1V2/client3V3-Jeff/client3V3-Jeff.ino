@@ -101,7 +101,6 @@ void setup(){
 
 void loop(){
   LEDcontroller();
-  twinkleLOOP();
   
   if(!Mirf.isSending() && Mirf.dataReady()){
     byte data[Mirf.payload];
@@ -111,7 +110,6 @@ void loop(){
       Serial.println(data[1],HEX);
       dataGet(data[1]);
     }
-    
   }
   
   //pixels.setPixelColor(5, pixels.Color(0,255,0));
@@ -202,9 +200,12 @@ void stateChange(int toState){
       }else{
         checkENTER = true;
       }
+      checkOR = true;
+      /*
       if(!pressOR){
         checkOR = true;
       }
+      */
     }else{
       checkTHEN = true;
       if(pressTHEN){
@@ -559,18 +560,4 @@ void LEDcontroller(){
   pixels.show();
 }
 
-void twinkleLOOP(){
-  if(pressLOOP){
-    if(twinkle  && millis() - twinkleTimeStamp >= 500){
-       twinkleTimeStamp = millis();
-       pixels.setPixelColor(2, pixels.Color(255,255,255));
-       twinkle = false;
-    }else{
-       twinkleTimeStamp = millis();
-       pixels.setPixelColor(2, pixels.Color(0,0,0));
-       twinkle = true;
-    }
-   pixels.show();
-  }
-}
 

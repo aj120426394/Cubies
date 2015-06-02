@@ -105,11 +105,12 @@ void loop(){
   if(!Mirf.isSending() && Mirf.dataReady()){
     byte data[Mirf.payload];
     Mirf.getData(data);
-    Serial.print("From Server: ");
-    Serial.println(data[0],HEX);
-    dataGet(data[0]);
+    if(data[0] == CLIENTNAME){
+      Serial.print("From Server: ");
+      Serial.println(data[1],HEX);
+      dataGet(data[1]);
+    }
   }
-  
   //pixels.setPixelColor(5, pixels.Color(0,255,0));
   //pixels.show();
 } 
@@ -132,7 +133,6 @@ void bState1(){
 }
 // color up, NOT up
 void bState2(){
-
   if(inputable && millis() - buttonPressTimeStamp >= 500){
     buttonPressTimeStamp = millis();
     if(digitalRead(buttonIF) == HIGH && checkBLUE){
@@ -140,13 +140,13 @@ void bState2(){
     }else if(digitalRead(buttonTHEN) == HIGH && checkRED){
        RED(false);
     }else if(digitalRead(buttonOR) == HIGH && checkYELLOW){
-       YELLOW(false);
+       checkYELLOW(false);
     }
    
     if(!pressLOOP){
       if(gameStart){
         if(digitalRead(buttonNOT) == HIGH && checkGREEN){
-           GREEN(false);
+           BLUE(false);
        }else if(digitalRead(buttonLOOP) == HIGH && checkLOOP){
            LOOP(false);
        } 
@@ -154,7 +154,7 @@ void bState2(){
         if(digitalRead(buttonNOT) == HIGH && checkNOT){
            NOT(false);
         }else if(digitalRead(buttonLOOP) == HIGH && checkGREEN){
-           GREEN(false);
+           BLUE(false);
         }
       }
        
@@ -194,9 +194,12 @@ void stateChange(int toState){
       }else{
         checkENTER = true;
       }
+       checkOR = true;
+      /*
       if(!pressOR){
         checkOR = true;
       }
+      */
     }else{
       checkTHEN = true;
       if(pressTHEN){
@@ -480,7 +483,7 @@ void checkReset(){
 }
 
 void LEDcontroller(){
-  if(checkIF || checkBLUE){
+  if(checkIF || checkOR){
     if(checkIF){
       pixels.setPixelColor(0, pixels.Color(255,255,255));
     }else{
@@ -502,12 +505,12 @@ void LEDcontroller(){
   
   if(checkTHEN || checkRED){
     if(checkTHEN){
-      pixels.setPixelColor(2, pixels.Color(255,255,255));
+      pixels.setPixelColor(4, pixels.Color(255,255,255));
     }else{
-      pixels.setPixelColor(2, pixels.Color(255,0,0));
+      pixels.setPixelColor(4, pixels.Color(255,0,0));
     }
   }else{
-    pixels.setPixelColor(2, pixels.Color(0,0,0));
+    pixels.setPixelColor(4, pixels.Color(0,0,0));
   }
   
   /*
@@ -528,14 +531,14 @@ void LEDcontroller(){
     pixels.setPixelColor(1, pixels.Color(0,0,0));
   }
   
-  if(checkLOOP || checkGREEN && !gameStart){
+  if(checkLOOP || checkGREEN){
     if(checkLOOP){
-      pixels.setPixelColor(4, pixels.Color(255,255,255));
+      pixels.setPixelColor(2, pixels.Color(255,255,255));
     }else{
-      pixels.setPixelColor(4, pixels.Color(0,255,0));
+      pixels.setPixelColor(2, pixels.Color(0,255,0));
     }
   }else{
-    pixels.setPixelColor(4, pixels.Color(0,0,0));
+    pixels.setPixelColor(2, pixels.Color(0,0,0));
   }
   pixels.show();
 }
