@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
-using UnityEditor;
+
+//using UnityEditor;
+
 using System.Collections;
 using System.Collections.Generic;
 
@@ -7,6 +9,11 @@ public class game : MonoBehaviour {
 	public float speed = 0.5f;
 	public obstacle startPlanet;
 	public obstacle finishPlanet;
+	public GameObject Rship;
+	public GameObject Gship;
+	public GameObject Bship;
+	public GameObject Yship;
+
 	
 	private Dictionary<string, character> characters;
 	private bool gamestart = false;
@@ -25,7 +32,7 @@ public class game : MonoBehaviour {
 		 */
 
 		PlayerPrefs.SetInt ("clientNum", 1);
-		PlayerPrefs.SetString ("C1", "P");
+		PlayerPrefs.SetString ("C1", "G");
 
 		print ("GAME RULES: I = if T = then  B = blue  R = Red G = green  Y = yellow");
 
@@ -42,8 +49,18 @@ public class game : MonoBehaviour {
 			string shipColor = PlayerPrefs.GetString(charName);
 			print(shipColor);
 			string prefabAddr = "Assets/Prefab/"+shipColor + "_ship.prefab";
+			GameObject shipPrefab = null;
+			//Object shipPrefab = AssetDatabase.LoadAssetAtPath (prefabAddr, typeof(GameObject));
 
-			Object shipPrefab = AssetDatabase.LoadAssetAtPath (prefabAddr, typeof(GameObject));
+			if(shipColor == "R"){
+				shipPrefab = Rship;
+			}else if(shipColor == "G"){
+				shipPrefab = Gship;
+			}else if(shipColor == "B"){
+				shipPrefab = Bship;
+			}else if(shipColor == "Y"){
+				shipPrefab = Yship;
+			}
 			GameObject shipObject = (GameObject)Instantiate (shipPrefab, new Vector3 (-17.4f, 5.6f, -1.7f), Quaternion.identity);
 
 			character ship = shipObject.GetComponent<character>();
@@ -80,7 +97,7 @@ public class game : MonoBehaviour {
 			string data = serialConn.recieveData ();
 			//string data = "";
 			if(data.Length > 0){
-				//print ("In coming data: " + data);
+
 				inputFunctions (data);
 				networkConn.sendData(data);
 			}
@@ -147,9 +164,10 @@ public class game : MonoBehaviour {
 	/* Handles input keys */
 	void inputFunctions(string data){
 		//writing a function
+		print ("In coming data: " + data);
 		string[] spilt = data.Split(':');
 		string from = spilt[0];
-		string command = spilt[1];
+		string command = spilt[1].Remove(1);
 
 		int i = int.Parse(from.Substring(1))-1;
 		character client = this.characters[from];

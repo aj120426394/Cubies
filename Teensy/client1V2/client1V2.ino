@@ -101,7 +101,7 @@ void setup(){
 
 void loop(){
   LEDcontroller();
-  /*
+  
   if(!Mirf.isSending() && Mirf.dataReady()){
     byte data[Mirf.payload];
     Mirf.getData(data);
@@ -109,7 +109,7 @@ void loop(){
     Serial.println(data[0],HEX);
     dataGet(data[0]);
   }
-  */
+  
   //pixels.setPixelColor(5, pixels.Color(0,255,0));
   //pixels.show();
 } 
@@ -139,13 +139,13 @@ void bState2(){
     }else if(digitalRead(buttonTHEN) == HIGH && checkRED){
        RED(false);
     }else if(digitalRead(buttonOR) == HIGH && checkYELLOW){
-       checkYELLOW(false);
+       YELLOW(false);
     }
    
     if(!pressLOOP){
       if(gameStart){
         if(digitalRead(buttonNOT) == HIGH && checkGREEN){
-           BLUE(false);
+           GREEN(false);
        }else if(digitalRead(buttonLOOP) == HIGH && checkLOOP){
            LOOP(false);
        } 
@@ -153,7 +153,7 @@ void bState2(){
         if(digitalRead(buttonNOT) == HIGH && checkNOT){
            NOT(false);
         }else if(digitalRead(buttonLOOP) == HIGH && checkGREEN){
-           BLUE(false);
+           GREEN(false);
         }
       }
        
@@ -479,7 +479,7 @@ void checkReset(){
 }
 
 void LEDcontroller(){
-  if(checkIF || checkOR){
+  if(checkIF || checkBLUE){
     if(checkIF){
       pixels.setPixelColor(0, pixels.Color(255,255,255));
     }else{
@@ -501,12 +501,12 @@ void LEDcontroller(){
   
   if(checkTHEN || checkRED){
     if(checkTHEN){
-      pixels.setPixelColor(4, pixels.Color(255,255,255));
+      pixels.setPixelColor(2, pixels.Color(255,255,255));
     }else{
-      pixels.setPixelColor(4, pixels.Color(255,0,0));
+      pixels.setPixelColor(2, pixels.Color(255,0,0));
     }
   }else{
-    pixels.setPixelColor(4, pixels.Color(0,0,0));
+    pixels.setPixelColor(2, pixels.Color(0,0,0));
   }
   
   /*
@@ -527,14 +527,14 @@ void LEDcontroller(){
     pixels.setPixelColor(1, pixels.Color(0,0,0));
   }
   
-  if(checkLOOP || checkGREEN){
+  if(checkLOOP || checkGREEN && !gameStart){
     if(checkLOOP){
-      pixels.setPixelColor(2, pixels.Color(255,255,255));
+      pixels.setPixelColor(4, pixels.Color(255,255,255));
     }else{
-      pixels.setPixelColor(2, pixels.Color(0,255,0));
+      pixels.setPixelColor(4, pixels.Color(0,255,0));
     }
   }else{
-    pixels.setPixelColor(2, pixels.Color(0,0,0));
+    pixels.setPixelColor(4, pixels.Color(0,0,0));
   }
   pixels.show();
 }
