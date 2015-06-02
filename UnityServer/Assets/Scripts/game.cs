@@ -35,6 +35,7 @@ public class game : MonoBehaviour {
 
 		PlayerPrefs.SetInt ("clientNum", 3);
 		PlayerPrefs.SetString ("C1", "G");
+		PlayerPrefs.SetString ("C2", "B");
 		PlayerPrefs.SetString ("C3", "R");
 
 

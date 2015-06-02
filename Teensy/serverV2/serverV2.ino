@@ -73,7 +73,7 @@ void loop(){
       str = "E"; //ENTER
     }
     Serial.println((String)from + ":" + (String)str);
-    feedback(from, str);
+    feedback(data[0], str);
     
     //S erial.println(data[1], HEX);
     Serial.flush();
@@ -99,44 +99,35 @@ void loop(){
   }
 }
 
-void feedback(char* from, char* data){
-   byte sendData[1];
+void feedback(byte from, char* data){
+   byte sendData[2];
    
-   char* client;
-    if(strstr(from, "C1") != NULL){
-      client = "clie1";
-    }else if(strstr(from, "C2") != NULL){
-      client = "clie2";
-    }else if(strstr(from, "C3") != NULL){
-      client = "clie3";
-    }else if(strstr(from, "C4") != NULL){
-      client = "clie4";
-    }
+   sendData[0] = from;
 
   if(strstr(data, "I") != NULL){
-    sendData[0] = (byte)0xB1;
+    sendData[1] = (byte)0xB1;
   }else if(strstr(data, "T") != NULL){
-    sendData[0] = (byte)0xB2;
+    sendData[1] = (byte)0xB2;
   }else if(strstr(data, "N") != NULL){
-    sendData[0] = (byte)0xB3;
+    sendData[1] = (byte)0xB3;
   }else if(strstr(data, "O") != NULL){
-    sendData[0] = (byte)0xB5;
+    sendData[1] = (byte)0xB5;
   }else if(strstr(data, "L") != NULL){
-    sendData[0] = (byte)0xB4;
+    sendData[1] = (byte)0xB4;
   }else if(strstr(data, "E") != NULL){
-    sendData[0] = (byte)0xBB;
+    sendData[1] = (byte)0xBB;
   }else if(strstr(data, "R") != NULL){
-    sendData[0] = (byte)0xB6;
+    sendData[1] = (byte)0xB6;
   }else if(strstr(data, "B") != NULL){
-    sendData[0] = (byte)0xB7;
+    sendData[1] = (byte)0xB7;
   }else if(strstr(data, "G") != NULL){
-    sendData[0] = (byte)0xB8;
+    sendData[1] = (byte)0xB8;
   }else if(strstr(data, "Y") != NULL){
-    sendData[0] = (byte)0xB9;
+    sendData[1] = (byte)0xB9;
   }else if(strstr(data, "P") != NULL){
-    sendData[0] = (byte)0xBA;
+    sendData[1] = (byte)0xBA;
   }
-  Mirf.setTADDR((byte *)client);
+  Mirf.setTADDR((byte *)"clie1");
   Mirf.send(sendData);
   while(Mirf.isSending()){
   }
@@ -144,15 +135,7 @@ void feedback(char* from, char* data){
 void sendData(byte client, char* sendingData){
   byte sendData[2];
   
-  if(strstr(serialData, "clie1") != NULL){
-      client = "clie1";
-    }else if(strstr(serialData, "C2") != NULL){
-      client = "clie2";
-    }else if(strstr(serialData, "C3") != NULL){
-      client = "clie3";
-    }else if(strstr(serialData, "C4") != NULL){
-      client = "clie4";
-    }
+  sendData[0] = client;
   
   if(strstr(sendingData, "GameStart") != NULL){
     sendData[1] = (byte)0xFF;
