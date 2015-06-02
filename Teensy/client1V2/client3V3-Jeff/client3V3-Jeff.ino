@@ -91,7 +91,7 @@ void setup(){
   
   Mirf.spi = &MirfHardwareSpi;
   Mirf.init();
-  Mirf.setRADDR((byte *)"clie3");
+  Mirf.setRADDR((byte *)"clie1");
   Mirf.payload = 32;
   Mirf.config();
   checkIF = true;
@@ -102,12 +102,16 @@ void setup(){
 void loop(){
   LEDcontroller();
   twinkleLOOP();
+  
   if(!Mirf.isSending() && Mirf.dataReady()){
     byte data[Mirf.payload];
     Mirf.getData(data);
-    Serial.print("From Server: ");
-    Serial.println(data[0],HEX);
-    dataGet(data[0]);
+    if(data[0] == CLIENTNAME){
+      Serial.print("From Server: ");
+      Serial.println(data[1],HEX);
+      dataGet(data[1]);
+    }
+    
   }
   
   //pixels.setPixelColor(5, pixels.Color(0,255,0));

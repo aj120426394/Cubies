@@ -33,8 +33,6 @@ void setup(){
 }
 
 void loop(){
-  
-
   if(!Mirf.isSending() && Mirf.dataReady()){
     //Serial.println("Get data");
     byte data[Mirf.payload];
@@ -85,43 +83,18 @@ void loop(){
   if(Serial.available() > 0){
     int lf = 10;
     Serial.readBytesUntil(lf,serialData,15);
-    char* client;
+    byte client;
     if(strstr(serialData, "C1") != NULL){
-      client = "clie1";
+      client = (byte)0xC1;
     }else if(strstr(serialData, "C2") != NULL){
-      client = "clie2";
+      client = (byte)0xC2;
     }else if(strstr(serialData, "C3") != NULL){
-      client = "clie3";
+      client = (byte)0xC3;
     }else if(strstr(serialData, "C4") != NULL){
-      client = "clie4";
+      client = (byte)0xC4;
     }
     
     sendData(client, serialData);
-    /*
-    if(strstr(serialData,"GameStart") != NULL){
-      int x;
-      for(x = 0; x < numOfClient; x++){
-        sendData(clients[x], "GameStart");
-      }
-    }else if(strstr(serialData,"StartInput") != NULL){
-      int x;
-      for(x = 0; x < numOfClient; x++){
-        sendData(clients[x], "StartInput");
-      }
-    }else if(strstr(serialData,"GameFin") != NULL){
-      int x;
-      for(x = 0; x < numOfClient; x++){
-        sendData(clients[x], "GameFin");
-      }
-    }else if(strstr(serialData,"ShipColor") != NULL){
-      int x;
-      for(x = 0; x < numOfClient; x++){
-        sendData(clients[x], "ShipColor");
-      }
-    }else{
-      sendData(client, serialData);
-    }
-    */
     Serial.flush();
   }
 }
@@ -168,31 +141,41 @@ void feedback(char* from, char* data){
   while(Mirf.isSending()){
   }
 }
-void sendData(char* client, char* sendingData){
-  byte sendData[1];
-
+void sendData(byte client, char* sendingData){
+  byte sendData[2];
+  
+  if(strstr(serialData, "clie1") != NULL){
+      client = "clie1";
+    }else if(strstr(serialData, "C2") != NULL){
+      client = "clie2";
+    }else if(strstr(serialData, "C3") != NULL){
+      client = "clie3";
+    }else if(strstr(serialData, "C4") != NULL){
+      client = "clie4";
+    }
+  
   if(strstr(sendingData, "GameStart") != NULL){
-    sendData[0] = (byte)0xFF;
+    sendData[1] = (byte)0xFF;
   }else if(strstr(sendingData, "StartInput") != NULL){
-    sendData[0] = (byte)0xEE;
+    sendData[1] = (byte)0xEE;
   }else if(strstr(sendingData, "GameFin") != NULL){
-    sendData[0] = (byte)0xDD;
+    sendData[1] = (byte)0xDD;
   }else if(strstr(sendingData, "ShipColor") != NULL){
-    sendData[0] = (byte)0xCC;
+    sendData[1] = (byte)0xCC;
   }else if(strstr(sendingData, "R") != NULL){
-    sendData[0] = (byte)0x06;
+    sendData[1] = (byte)0x06;
   }else if(strstr(sendingData, "B") != NULL){
-    sendData[0] = (byte)0x07;
+    sendData[1] = (byte)0x07;
   }else if(strstr(sendingData, "G") != NULL){
-    sendData[0] = (byte)0x08;
+    sendData[1] = (byte)0x08;
   }else if(strstr(sendingData, "Y") != NULL){
-    sendData[0] = (byte)0x09;
+    sendData[1] = (byte)0x09;
   }else if(strstr(sendingData, "P") != NULL){
-    sendData[0] = (byte)0x0A;
+    sendData[1] = (byte)0x0A;
   }else if(strstr(sendingData, "L") != NULL){
-    sendData[0] = (byte)0x04;
+    sendData[1] = (byte)0x04;
   }
-  Mirf.setTADDR((byte *)client);
+  Mirf.setTADDR((byte *)"clie1");
   Mirf.send(sendData);
   while(Mirf.isSending()){
   }
