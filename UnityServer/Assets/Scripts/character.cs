@@ -209,15 +209,10 @@ public class character : MonoBehaviour {
 			result += ch;
 		}
 
-<<<<<<< HEAD
-		//print (result);
-		foreach (obstacle o in connObs) {
-			//print ("oname:" + o.getName());
-=======
+
 		print (result);
 		foreach (obstacle o in connObs) {
 			print ("oname:" + o.getName());
->>>>>>> 25519f7c46e457e37f9a29f859f5aabf77d83a00
 			if(result.Contains(o.getTag())){
 				if(moveableObs.ContainsKey(o.getTag())){
 					print ("test" + o.getTag());
