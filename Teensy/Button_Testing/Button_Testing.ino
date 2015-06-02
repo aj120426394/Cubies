@@ -77,22 +77,22 @@ void loop(){
   // check if the pushbutton is pressed.
   // if it is, the buttonState is HIGH:
   if(buttonState == HIGH && millis() - buttonPressTimeStamp >= 500){
-    Serial.println("1");
+    Serial.println("OR");
     buttonPressTimeStamp = millis();
   }else if(buttonState2 == HIGH && millis() - buttonPressTimeStamp >= 500){
-    Serial.println("2");
+    Serial.println("LOOP");
     buttonPressTimeStamp = millis();
   }else if(buttonState3 == HIGH && millis() - buttonPressTimeStamp >= 500){
-    Serial.println("3");
+    Serial.println("NOT");
     buttonPressTimeStamp = millis();
   }else if(buttonState4 == HIGH && millis() - buttonPressTimeStamp >= 500){
-    Serial.println("4");
+    Serial.println("ENTER");
     buttonPressTimeStamp = millis();
   }else if(buttonState5 == HIGH && millis() - buttonPressTimeStamp >= 500){
-    Serial.println("5");
+    Serial.println("THEN");
     buttonPressTimeStamp = millis();
   }else if(buttonState6 == HIGH && millis() - buttonPressTimeStamp >= 500){
-    Serial.println("6");
+    Serial.println("IF");
     buttonPressTimeStamp = millis();
   }
   

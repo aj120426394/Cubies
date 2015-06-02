@@ -209,9 +209,9 @@ public class character : MonoBehaviour {
 			result += ch;
 		}
 
-		print (result);
+		//print (result);
 		foreach (obstacle o in connObs) {
-			print ("oname:" + o.getName());
+			//print ("oname:" + o.getName());
 			if(result.Contains(o.getTag())){
 				if(moveableObs.ContainsKey(o.getTag())){
 					print ("test" + o.getTag());
@@ -283,7 +283,10 @@ public class character : MonoBehaviour {
 	 * Get data from user
 	 */
 	public void input(string command){
+
 		if (inputAble) {
+			print ("charter get command: " + command);
+			print(command.Length);
 			if (!gameStart) {
 				newStatement += command;
 				if (newStatement.Contains("E")) {
@@ -292,6 +295,9 @@ public class character : MonoBehaviour {
 					newStatement = "";
 				}
 			} else {
+				foreach(string s in moveableObs.Keys){
+					print (s);
+				}
 				if(moveableObs.ContainsKey(command)){
 					if(command.Contains("L")){
 						this.moveToObstacle = this.loopPath.ElementAt(1);
