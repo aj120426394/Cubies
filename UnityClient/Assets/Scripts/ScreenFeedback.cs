@@ -5,9 +5,9 @@ using System.Collections.Generic;
 public class ScreenFeedback : MonoBehaviour {
 	public string ipaddress;
 	private string IP; //"192.168.0.10"
-	private string ID = "";
-	private string C1 = "10.89.188.73";
-	private string C2 = "192.168.0.9";
+	public string ID = "";
+	private string C1 = "192.168.0.2";
+	private string C2 = "192.168.0.1";
 	private string C3 = "192.168.0.8";
 	private RectTransform inventoryRect;
 	private float inventoryWidth, inventoryHeight;
@@ -34,10 +34,6 @@ public class ScreenFeedback : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-<<<<<<< HEAD
-
-=======
->>>>>>> 25519f7c46e457e37f9a29f859f5aabf77d83a00
 		IP = Network.player.ipAddress;
 		if (IP == C1) {
 			this.ID = "C1";
@@ -70,54 +66,60 @@ public class ScreenFeedback : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
 		if (Input.GetKeyDown (KeyCode.I)) {
-			nView.RPC ("UpdateScreen", RPCMode.Others, "C1:I");
+			nView.RPC ("UpdateScreen", RPCMode.All, "C1:I");
 		}
 		if (Input.GetKeyDown (KeyCode.T)) {
-			nView.RPC ("UpdateScreen", RPCMode.Others, "C1:T");
+			nView.RPC ("UpdateScreen", RPCMode.All, "C1:T");
 		}
 		if (Input.GetKeyDown (KeyCode.L)) {
-			nView.RPC ("UpdateScreen", RPCMode.Others, "C1:L");
+			nView.RPC ("UpdateScreen", RPCMode.All, "C1:L");
 		}
 		if (Input.GetKeyDown (KeyCode.O)) {
-			nView.RPC ("UpdateScreen", RPCMode.Others, "C1:O");
+			nView.RPC ("UpdateScreen", RPCMode.All, "C1:O");
 		}
 		if (Input.GetKeyDown (KeyCode.N)) {
-			nView.RPC ("UpdateScreen", RPCMode.Others, "C1:N");
+			nView.RPC ("UpdateScreen", RPCMode.All, "C1:N");
 		}
 		if (Input.GetKeyDown (KeyCode.E)) {
-			nView.RPC ("UpdateScreen", RPCMode.Others, "C1:E");
+			nView.RPC ("UpdateScreen", RPCMode.All, "C1:E");
 		}
 		if (Input.GetKeyDown (KeyCode.R)) {
-			nView.RPC ("UpdateScreen", RPCMode.Others, "C1:R");
+			nView.RPC ("UpdateScreen", RPCMode.All, "C1:R");
 		}
 		if (Input.GetKeyDown (KeyCode.G)) {
-			nView.RPC ("UpdateScreen", RPCMode.Others, "C1:G");
+			nView.RPC ("UpdateScreen", RPCMode.All, "C1:G");
 		}
 		if (Input.GetKeyDown (KeyCode.B)) {
-			nView.RPC ("UpdateScreen", RPCMode.Others, "C1:B");
+			nView.RPC ("UpdateScreen", RPCMode.All, "C1:B");
 		}
 		if (Input.GetKeyDown (KeyCode.Y)) {
-			nView.RPC ("UpdateScreen", RPCMode.Others, "C1:Y");
+			nView.RPC ("UpdateScreen", RPCMode.All, "C1:Y");
 		}
 		if (Input.GetKeyDown (KeyCode.P)) {
-			nView.RPC ("UpdateScreen", RPCMode.Others, "C1:P");
+			nView.RPC ("UpdateScreen", RPCMode.All, "C1:P");
 		}
+
 		
 	}
 
 	[RPC]
-	public void UpdateScreen(string data){
+	void UpdateScreen(string data){
+		print (data);
 		string[] spilt = data.Split(':');
 		string to = spilt [0];
 		string command = spilt [1];
+		print (this.ID);
 		if (to.Equals (this.ID)) {
 			printCommand(command);
 			slotCount++;
 		}
-
+		
 	}
-	void printCommand(string command){
+
+	public void printCommand(string command){
+		print (command);
 		switch (command) {
 		case "I":
 			allSlots[slotCount].GetComponent<UnityEngine.UI.Image>().sprite = ifSprite;
@@ -129,6 +131,7 @@ public class ScreenFeedback : MonoBehaviour {
 			allSlots[slotCount].GetComponent<UnityEngine.UI.Image>().sprite = loopSprite;
 			break;
 		case "O":
+			print ("test");
 			allSlots[slotCount].GetComponent<UnityEngine.UI.Image>().sprite = orSprite;
 			break;
 		case "E":

@@ -4,6 +4,7 @@ using System.Collections;
 public class NetworkConnection : MonoBehaviour {
 
 	public string ipaddress;
+	public ScreenFeedback sf;
 
 	private bool connected = false;
 
@@ -27,7 +28,7 @@ public class NetworkConnection : MonoBehaviour {
 		if (!connected) {
 
 			if (GUILayout.Button ("Connect")){
-				Network.Connect ("127.0.0.1", 25001);
+				Network.Connect ("192.168.0.3", 25001);
 			}
 				
 
@@ -38,5 +39,19 @@ public class NetworkConnection : MonoBehaviour {
 		else
 			GUILayout.Label ("Connections: " + Network.connections.Length.ToString ());
 			GUILayout.Label ("My IP: " + ipaddress);
+	}
+
+	[RPC]
+	void getData(string data){
+		print (data);
+		string[] spilt = data.Split(':');
+		string to = spilt [0];
+		string command = spilt [1];
+		print (sf.ID);
+		if (to.Contains (sf.ID)) {
+			sf.printCommand(command);
+			sf.slotCount++;
+		}
+		
 	}
 }
