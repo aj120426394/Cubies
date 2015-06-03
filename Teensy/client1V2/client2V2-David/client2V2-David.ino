@@ -527,7 +527,7 @@ void LEDcontroller(){
   }
   */
   
-  if(checkNOT || checkGREEN){
+  if(checkNOT || checkGREEN && pressLOOP){
     if(checkNOT){
       pixels.setPixelColor(2, pixels.Color(255,255,255));
     }else{
@@ -537,7 +537,7 @@ void LEDcontroller(){
     pixels.setPixelColor(2, pixels.Color(0,0,0));
   }
   
-  if(checkLOOP || checkGREEN && !gameStart){
+  if(checkLOOP || checkGREEN && !gameStart && !pressLOOP){
     if(checkLOOP){
       pixels.setPixelColor(4, pixels.Color(255,255,255));
     }else{
