@@ -140,13 +140,13 @@ void bState2(){
     }else if(digitalRead(buttonTHEN) == HIGH && checkRED){
        RED(false);
     }else if(digitalRead(buttonOR) == HIGH && checkYELLOW){
-       checkYELLOW(false);
+       YELLOW(false);
     }
    
     if(!pressLOOP){
       if(gameStart){
         if(digitalRead(buttonNOT) == HIGH && checkGREEN){
-           BLUE(false);
+           GREEN(false);
        }else if(digitalRead(buttonLOOP) == HIGH && checkLOOP){
            LOOP(false);
        } 
@@ -154,13 +154,13 @@ void bState2(){
         if(digitalRead(buttonNOT) == HIGH && checkNOT){
            NOT(false);
         }else if(digitalRead(buttonLOOP) == HIGH && checkGREEN){
-           BLUE(false);
+           GREEN(false);
         }
       }
        
      }else{
        if(digitalRead(buttonNOT) == HIGH && checkBLUE){
-         BLUE(false);
+         GREEN(false);
        }
      }
   }
@@ -178,7 +178,11 @@ void stateChange(int toState){
     // COLOR / NOT
     buttonChange(2);
     if(!gameStart){
-      checkNOT = true;
+      if(pressLOOP){
+        checkNOT = false;
+      }else{
+        checkNOT = true;
+      }
       checkRED = true;
       checkBLUE = true;
       checkGREEN = true;
@@ -483,7 +487,7 @@ void checkReset(){
 }
 
 void LEDcontroller(){
-  if(checkIF || checkOR){
+  if(checkIF || checkBLUE){
     if(checkIF){
       pixels.setPixelColor(0, pixels.Color(255,255,255));
     }else{
@@ -505,12 +509,12 @@ void LEDcontroller(){
   
   if(checkTHEN || checkRED){
     if(checkTHEN){
-      pixels.setPixelColor(4, pixels.Color(255,255,255));
+      pixels.setPixelColor(2, pixels.Color(255,255,255));
     }else{
-      pixels.setPixelColor(4, pixels.Color(255,0,0));
+      pixels.setPixelColor(2, pixels.Color(255,0,0));
     }
   }else{
-    pixels.setPixelColor(4, pixels.Color(0,0,0));
+    pixels.setPixelColor(2, pixels.Color(0,0,0));
   }
   
   /*
@@ -521,7 +525,7 @@ void LEDcontroller(){
   }
   */
   
-  if(checkNOT || checkGREEN){
+  if(checkNOT || checkGREEN  && pressLOOP){
     if(checkNOT){
       pixels.setPixelColor(1, pixels.Color(255,255,255));
     }else{
@@ -531,14 +535,14 @@ void LEDcontroller(){
     pixels.setPixelColor(1, pixels.Color(0,0,0));
   }
   
-  if(checkLOOP || checkGREEN){
+  if(checkLOOP || checkGREEN && !gameStart && !pressLOOP){
     if(checkLOOP){
-      pixels.setPixelColor(2, pixels.Color(255,255,255));
+      pixels.setPixelColor(4, pixels.Color(255,255,255));
     }else{
-      pixels.setPixelColor(2, pixels.Color(0,255,0));
+      pixels.setPixelColor(4, pixels.Color(0,255,0));
     }
   }else{
-    pixels.setPixelColor(2, pixels.Color(0,0,0));
+    pixels.setPixelColor(4, pixels.Color(0,0,0));
   }
   pixels.show();
 }

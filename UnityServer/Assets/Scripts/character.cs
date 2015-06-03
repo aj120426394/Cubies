@@ -291,7 +291,7 @@ public class character : MonoBehaviour {
 	public void input(string command){
 
 		if (inputAble) {
-			print ("charter get command: " + command);
+			print (this.name + " get command: " + command);
 			print(command.Length);
 			if (!gameStart) {
 				newStatement += command;
