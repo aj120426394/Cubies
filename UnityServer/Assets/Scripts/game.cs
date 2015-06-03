@@ -253,7 +253,7 @@ public class game : MonoBehaviour {
 			Vector3 point = camera.WorldToViewportPoint(target);
 			Vector3 delta = target - camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z));
 			Vector3 destination = transform.position + delta;
-			transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, 0.1f);
+			transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, 0.5f);
 		}
 
 
