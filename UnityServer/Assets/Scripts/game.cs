@@ -228,15 +228,15 @@ public class game : MonoBehaviour {
 
 		float camSize = 0f;
 		if (!objectMove) {
-			camSize = 10f;
+			camSize = 12f;
 		} else {
-			camSize = (right - left) / 3f;
+			camSize = (right - left) / 2f;
 			if (camSize <= 2f) {
 				camSize = 2f;
 			}
 		}
 
-		this.camera.orthographicSize = Mathf.MoveTowards (this.camera.orthographicSize, camSize, 2.0f * Time.deltaTime);
+		this.camera.orthographicSize = Mathf.MoveTowards (this.camera.orthographicSize, camSize, 5.0f * Time.deltaTime);
 
 		targetX = targetX / characters.Count;
 		targetY = targetY / characters.Count;
