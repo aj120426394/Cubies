@@ -229,25 +229,33 @@ public class game : MonoBehaviour {
 		float camSize = 0f;
 		if (!objectMove) {
 			camSize = 12f;
+			this.camera.orthographicSize = Mathf.MoveTowards (this.camera.orthographicSize, camSize, 6.0f * Time.deltaTime);
+
+			Vector3 target = new Vector3 (1f, 1f, -15f);
+			
+			Vector3 point = camera.WorldToViewportPoint(target);
+			Vector3 delta = target - camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z));
+			Vector3 destination = transform.position + delta;
+			transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, 0.1f);
+
 		} else {
 			camSize = (right - left) / 2f;
 			if (camSize <= 2f) {
 				camSize = 2f;
 			}
+			targetX = targetX / characters.Count;
+			targetY = targetY / characters.Count;
+			targetZ = targetZ / characters.Count;
+			
+			Vector3 target = new Vector3 (targetX, targetY, targetZ);
+			
+			Vector3 point = camera.WorldToViewportPoint(target);
+			Vector3 delta = target - camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z));
+			Vector3 destination = transform.position + delta;
+			transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, 0.1f);
 		}
 
-		this.camera.orthographicSize = Mathf.MoveTowards (this.camera.orthographicSize, camSize, 5.0f * Time.deltaTime);
 
-		targetX = targetX / characters.Count;
-		targetY = targetY / characters.Count;
-		targetZ = targetZ / characters.Count;
-
-		Vector3 target = new Vector3 (targetX, targetY, targetZ);
-
-		Vector3 point = camera.WorldToViewportPoint(target);
-		Vector3 delta = target - camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z));
-		Vector3 destination = transform.position + delta;
-		transform.position = Vector3.SmoothDamp(transform.position, destination, ref velocity, 0.1f);
 	}
 
 	/*
