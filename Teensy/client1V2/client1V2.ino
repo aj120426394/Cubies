@@ -1,6 +1,6 @@
 /**
  * A Mirf example to test the latency between two Ardunio.
- *
+ *`1234567898765432456789
  * Pins:
  * Hardware SPI:
  * MISO -> 12
@@ -12,7 +12,7 @@
  * CSN -> 7
  *
  * Note: To see best case latency comment out all Serial.println
- * statements not displaying the result and load 
+ * statements not displaying the result and load
  * 'ping_server_interupt' on the server.
  */
 #include <SPI.h>
@@ -88,7 +88,7 @@ void setup(){
 
   Serial.begin(9600);
   pixels.begin();
-  
+
   Mirf.spi = &MirfHardwareSpi;
   Mirf.init();
   Mirf.setRADDR((byte *)"clie1");
@@ -96,12 +96,12 @@ void setup(){
   Mirf.config();
   checkIF = true;
   Serial.println("Beginning ... ");
-  
+
 }
 
 void loop(){
   LEDcontroller();
-  
+
   if(!Mirf.isSending() && Mirf.dataReady()){
     byte data[Mirf.payload];
     Mirf.getData(data);
@@ -113,7 +113,7 @@ void loop(){
   }
   //pixels.setPixelColor(5, pixels.Color(0,255,0));
   //pixels.show();
-} 
+}
 //initial setting of the button
 void bState1(){
   if(inputable && millis() - buttonPressTimeStamp >= 500){
@@ -142,14 +142,14 @@ void bState2(){
     }else if(digitalRead(buttonOR) == HIGH && checkYELLOW){
        YELLOW(false);
     }
-   
+
     if(!pressLOOP){
       if(gameStart){
         if(digitalRead(buttonNOT) == HIGH && checkGREEN){
            GREEN(false);
        }else if(digitalRead(buttonLOOP) == HIGH && checkLOOP){
            LOOP(false);
-       } 
+       }
       }else{
         if(digitalRead(buttonNOT) == HIGH && checkNOT){
            NOT(false);
@@ -157,7 +157,7 @@ void bState2(){
            GREEN(false);
         }
       }
-       
+
      }else{
        if(digitalRead(buttonNOT) == HIGH && checkBLUE){
          GREEN(false);
@@ -168,7 +168,7 @@ void bState2(){
 
 void stateChange(int toState){
   checkReset();
-  
+
   if (toState == 1){
     // IF / LOOP
     buttonChange(1);
@@ -232,7 +232,7 @@ void buttonChange(int temp){
 void IF(bool flag){
   if(!flag){
     Serial.println("IF");
-    byte str = (byte)0x01; 
+    byte str = (byte)0x01;
     dataSending(str);
   }else{
     stateChange(2);
@@ -258,7 +258,7 @@ void NOT(bool flag){
     dataSending(str);
   }else{
     checkNOT = false;
-  } 
+  }
 }
 
 void LOOP(bool flag){
@@ -272,15 +272,15 @@ void LOOP(bool flag){
     }
     checkLOOP = false;
   }
-  
-  
-  
-  // LED twinkle 
+
+
+
+  // LED twinkle
 }
 void OR(bool flag){
   if(!flag){
     Serial.println("OR");
-    byte str = (byte)0x05;  
+    byte str = (byte)0x05;
     dataSending(str);
   }else{
     pressOR = true;
@@ -290,7 +290,7 @@ void OR(bool flag){
 void RED(bool flag){
   if(!flag){
     Serial.println("RED");
-    byte str = (byte)0x06;  
+    byte str = (byte)0x06;
     dataSending(str);
   }else{
     if(!gameStart){
@@ -303,7 +303,7 @@ void RED(bool flag){
 void BLUE(bool flag){
   if(!flag){
     Serial.println("BLUE");
-    byte str = (byte)0x07;  
+    byte str = (byte)0x07;
     dataSending(str);
   }else{
     if(!gameStart){
@@ -316,7 +316,7 @@ void BLUE(bool flag){
 void GREEN(bool flag){
   if(!flag){
     Serial.println("GREEN");
-    byte str = (byte)0x08;  
+    byte str = (byte)0x08;
     dataSending(str);
   }else{
     if(!gameStart){
@@ -329,7 +329,7 @@ void GREEN(bool flag){
 void YELLOW(bool flag){
   if(!flag){
     Serial.println("YELLOW");
-    byte str = (byte)0x09;  
+    byte str = (byte)0x09;
     dataSending(str);
   }else{
     if(!gameStart){
@@ -342,7 +342,7 @@ void YELLOW(bool flag){
 void PURPLE(bool flag){
   if(!flag){
     Serial.println("PURPLE");
-    byte str = (byte)0x0A;  
+    byte str = (byte)0x0A;
     dataSending(str);
   }else{
     if(!gameStart){
@@ -355,7 +355,7 @@ void PURPLE(bool flag){
 void ENTER(bool flag){
   if(!flag){
     Serial.println("ENTER");
-    byte str = (byte)0x0B;  
+    byte str = (byte)0x0B;
     dataSending(str);
   }else{
     stateChange(1);
@@ -405,7 +405,7 @@ void dataGet(byte str){
     shipColor = true;
     stateChange(2);
   }
-  
+
   if(str == (byte)0x06){
     if(shipColor){
       checkRED = false;
@@ -445,7 +445,7 @@ void dataGet(byte str){
     checkLOOP = true;
     Serial.println("LED:LOOP");
   }
-  
+
   if(str == (byte)0xB1){
     IF(true);//I
   }else if(str == (byte)0xB2){
@@ -478,7 +478,7 @@ void checkReset(){
   checkNOT = false;
   checkOR = false;
   checkLOOP = false;
-  
+
   checkRED = false;
   checkBLUE = false;
   checkGREEN = false;
@@ -496,7 +496,7 @@ void LEDcontroller(){
   }else{
     pixels.setPixelColor(0, pixels.Color(0,0,0));
   }
-  
+
   if(checkOR || checkYELLOW){
     if(checkOR){
       pixels.setPixelColor(3, pixels.Color(255,255,255));
@@ -506,7 +506,7 @@ void LEDcontroller(){
   }else{
     pixels.setPixelColor(3, pixels.Color(0,0,0));
   }
-  
+
   if(checkTHEN || checkRED){
     if(checkTHEN){
       pixels.setPixelColor(2, pixels.Color(255,255,255));
@@ -516,7 +516,7 @@ void LEDcontroller(){
   }else{
     pixels.setPixelColor(2, pixels.Color(0,0,0));
   }
-  
+
   /*
   if(checkENTER){
     pixels.setPixelColor(2, pixels.Color(255,255,255));
@@ -524,7 +524,7 @@ void LEDcontroller(){
     pixels.setPixelColor(2, pixels.Color(0,0,0));
   }
   */
-  
+
   if(checkNOT || checkGREEN  && pressLOOP){
     if(checkNOT){
       pixels.setPixelColor(1, pixels.Color(255,255,255));
@@ -534,7 +534,7 @@ void LEDcontroller(){
   }else{
     pixels.setPixelColor(1, pixels.Color(0,0,0));
   }
-  
+
   if(checkLOOP || checkGREEN && !gameStart && !pressLOOP){
     if(checkLOOP){
       pixels.setPixelColor(4, pixels.Color(255,255,255));
