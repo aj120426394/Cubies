@@ -1,6 +1,9 @@
 /**
  * A Mirf example to test the latency between two Ardunio.
- *`1234567898765432456789
+ *123
+ *1234
+ *12345
+ *
  * Pins:
  * Hardware SPI:
  * MISO -> 12
