@@ -1,5 +1,5 @@
 /**
- * A Mirf example to test the latency between two Ardunio.
+ * A Mirf example to test the latency between two Ardunio.2345678vghjkljhgfds
  *asdfghjkjhgfdsdfghjk
  * Pins:
  * Hardware SPI:
